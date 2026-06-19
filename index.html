@@ -3,1169 +3,730 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workflow: Адаптивный курс</title>
+<title>Как создаётся адаптивный курс</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #ffffff;
+  --bg: #fafafa;
   --fg: #0f172a;
   --mute: #64748b;
   --border: #e2e8f0;
   --card: #ffffff;
-  --surface: #f8fafc;
-  --radius: 10px;
+  --radius: 14px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 }
 
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--fg);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* ─── HEADER ─────────────────────────────────────────────── */
 .page-header {
-  padding: 20px 20px 14px;
+  background: var(--card);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: var(--bg);
-  z-index: 20;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
+  padding: 20px 24px 16px;
 }
-.page-title { font-size: 15px; font-weight: 700; }
-.page-sub   { font-size: 11px; color: var(--mute); }
+.page-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--fg);
+  margin-bottom: 4px;
+  letter-spacing: -.02em;
+}
+.page-sub {
+  font-size: 13px;
+  color: var(--mute);
+}
 
-/* ─── MOBILE: accordion list ─────────────────────────────── */
-.mobile-view { display: none; }
+/* ─── PHASE LABEL ────────────────────────────────────────── */
+.phase-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--mute);
+  padding: 20px 24px 6px;
+}
 
-.accordion { border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 10px; }
+/* ─── CARD ───────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 0 16px 10px;
+}
+.card-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+  display: block;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.card-body {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+}
+.card-body ul {
+  padding-left: 18px;
+  margin-top: 5px;
+}
+.card-body li { margin-bottom: 3px; }
+
+/* card accent borders */
+.card-purple { border-left: 4px solid #8b5cf6; }
+.card-blue   { border-left: 4px solid #3b82f6; }
+.card-teal   { border-left: 4px solid #14b8a6; }
+.card-amber  { border-left: 4px solid #f59e0b; }
+.card-rose   { border-left: 4px solid #f43f5e; }
+.card-green  { border-left: 4px solid #22c55e; }
+.card-indigo { border-left: 4px solid #6366f1; }
+
+/* tag */
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-bottom: 8px;
+}
+.tag-purple { background: #ede9fe; color: #6d28d9; }
+.tag-blue   { background: #dbeafe; color: #1d4ed8; }
+.tag-teal   { background: #ccfbf1; color: #0f766e; }
+.tag-amber  { background: #fef3c7; color: #92400e; }
+.tag-rose   { background: #ffe4e6; color: #9f1239; }
+.tag-green  { background: #dcfce7; color: #15803d; }
+.tag-indigo { background: #e0e7ff; color: #4338ca; }
+
+/* ─── ARROW ──────────────────────────────────────────────── */
+.arrow {
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 20px;
+  padding: 2px 0;
+}
+
+/* ─── STEPS STRIP (for test breakdown) ───────────────────── */
+.steps-strip {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.step-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.chip-info  { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.chip-q     { background: #f5f3ff; border-color: #ddd6fe; color: #7c3aed; }
+.chip-итог  { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+
+/* ─── FLOW STRIP (for adaptive logic) ───────────────────── */
+.flow-strip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  row-gap: 8px;
+}
+.flow-box {
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+.flow-arrow {
+  font-size: 14px;
+  color: #94a3b8;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.fb-mat   { background: #eff6ff; color: #1d4ed8; }
+.fb-vid   { background: #faf5ff; color: #7c3aed; }
+.fb-test  { background: #fff7ed; color: #c2410c; }
+.fb-pass  { background: #f0fdf4; color: #15803d; }
+.fb-fail  { background: #fff1f2; color: #be123c; }
+.fb-extra { background: #ccfbf1; color: #0f766e; }
+.fb-next  { background: #f0fdf4; color: #15803d; }
+
+/* ─── NOTE BOX ───────────────────────────────────────────── */
+.note {
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 10px;
+  font-weight: 500;
+  border-left: 3px solid;
+}
+.note-blue  { background: #eff6ff; border-color: #60a5fa; color: #1e40af; }
+.note-green { background: #f0fdf4; border-color: #4ade80; color: #166534; }
+.note-amber { background: #fffbeb; border-color: #fbbf24; color: #92400e; }
+
+/* ─── RESULT ─────────────────────────────────────────────── */
+.result-card {
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 0 16px 24px;
+  font-size: 13px;
+  color: #14532d;
+  line-height: 1.7;
+}
+.result-card strong { font-weight: 700; }
+
+/* ─── DESKTOP GRID ───────────────────────────────────────── */
+@media (min-width: 900px) {
+  body { background: #f1f5f9; }
+  .page-header { padding: 24px 40px 18px; }
+  .page-title { font-size: 22px; }
+
+  .mobile-only { display: none !important; }
+
+  .page-scroll {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .grid-span2 { grid-column: span 2; }
+
+  .card { margin: 0; height: 100%; }
+  .phase-label { padding: 24px 0 8px; font-size: 10px; }
+  .phase-label:first-child { padding-top: 8px; }
+  .result-card { margin: 14px 0 0; }
+
+  .arrow { display: none; }
+
+  /* section divider */
+  .section-arrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .section-arrow::before,
+  .section-arrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+}
+
+@media (max-width: 899px) {
+  .desktop-only { display: none !important; }
+  .page-scroll { padding-bottom: 32px; }
+  .section-arrow { display: none; }
+}
+
+/* ─── LEGEND ─────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  margin-top: 4px;
+}
+@media (min-width: 900px) {
+  .legend { padding: 14px 32px 20px; max-width: 1240px; margin: 4px auto 0; }
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--mute); font-weight: 500;
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── ACCORDION (mobile) ─────────────────────────────────── */
+.accordion-wrap { margin: 0 16px 10px; }
 .accordion-btn {
   width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  background: var(--bg);
-  border: none;
+  padding: 13px 16px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
   cursor: pointer;
   text-align: left;
   font-family: var(--font);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--fg);
+  transition: border-color .15s;
 }
-.accordion-btn .num {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 800; color: #fff;
-  flex-shrink: 0;
+.accordion-btn.open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: var(--border);
 }
-.accordion-btn .chevron {
-  margin-left: auto;
-  font-size: 10px;
-  color: var(--mute);
-  transition: transform .2s;
-}
+.accordion-btn .icon { font-size: 20px; flex-shrink: 0; }
+.accordion-btn .chevron { margin-left: auto; color: var(--mute); font-size: 11px; transition: transform .2s; }
 .accordion-btn.open .chevron { transform: rotate(180deg); }
 .accordion-body {
   display: none;
-  padding: 0 14px 14px;
-  border-top: 1px solid var(--border);
-}
-.accordion-body.open { display: block; }
-
-/* ─── DESKTOP: swimlane ───────────────────────────────────── */
-.desktop-view { display: block; }
-
-.page-scroll { overflow-x: auto; padding: 16px 20px 32px; }
-
-.lanes-header {
-  display: flex;
-  min-width: 1060px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius) var(--radius) 0 0;
-  overflow: hidden;
-}
-.lane-h {
-  flex: 1;
-  padding: 10px 12px;
-  font-size: 9.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .08em;
-  text-align: center;
-  border-right: 1px solid var(--border);
-  line-height: 1.4;
-}
-.lane-h:last-child { border-right: none; }
-
-.lanes-body {
-  display: flex;
-  min-width: 1060px;
+  padding: 14px 16px 16px;
+  background: var(--card);
   border: 1.5px solid var(--border);
   border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
-  overflow: hidden;
-}
-.lane {
-  flex: 1;
-  border-right: 1px solid var(--border);
-  padding: 12px 10px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.lane:last-child { border-right: none; }
-
-/* ─── PHASE CARD ─────────────────────────────────────────── */
-.phase {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.phase-head {
-  padding: 7px 10px;
-  font-size: 9.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .07em;
-  display: flex; align-items: center; gap: 6px;
-}
-.phase-num {
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 800; color: #fff;
-  flex-shrink: 0;
-}
-.phase-body { padding: 8px 10px 10px; }
-
-/* ─── SHARED CONTENT ─────────────────────────────────────── */
-.item { margin-bottom: 7px; }
-.item:last-child { margin-bottom: 0; }
-.item-sub { font-size: 10.5px; color: var(--mute); }
-
-.code {
-  font-family: var(--mono);
-  font-size: 9.5px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 5px 8px;
-  margin-top: 5px;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  font-size: 13px;
   color: #334155;
-  line-height: 1.55;
-  white-space: pre;
-  overflow-x: auto;
+  line-height: 1.6;
 }
-/* Mobile code — allow wrap */
-@media (max-width: 767px) {
-  .code { white-space: pre-wrap; font-size: 10px; }
-}
-
-.steps-list { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
-.step-row {
-  display: flex; align-items: flex-start; gap: 6px;
-  padding: 4px 7px; border-radius: 6px;
-  font-size: 10px;
-}
-.step-num {
-  font-size: 9px; font-weight: 700;
-  width: 26px; flex-shrink: 0; text-align: center; padding-top: 1px;
-}
-.step-text { flex: 1; }
-.step-kind {
-  font-size: 8.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .05em; flex-shrink: 0; padding-top: 1px;
-}
-.sr-info { background: #f0f9ff; }
-.sr-q    { background: #f5f3ff; }
-.sr-itog { background: #f0fdf4; }
-.sr-info .step-kind { color: #0369a1; }
-.sr-q    .step-kind { color: #7c3aed; }
-.sr-itog .step-kind { color: #059669; }
-
-.divider { height: 1px; background: var(--border); margin: 7px 0; }
-
-.rule {
-  border-radius: 6px; padding: 5px 8px; margin-top: 6px;
-  font-size: 10px; font-weight: 600; line-height: 1.4;
-  border-left: 3px solid;
-}
-.rule-red    { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
-.rule-yellow { background: #fef9c3; border-color: #ca8a04; color: #78350f; }
-.rule-green  { background: #f0fdf4; border-color: #10b981; color: #065f46; }
-
-.arrow-down { text-align: center; color: var(--mute); font-size: 14px; padding: 1px 0; }
-
-.result-card {
-  border: 2px solid #6ee7b7;
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: #f0fdf4;
-  color: #064e3b;
-  font-size: 11px;
-  line-height: 1.7;
-}
-
-/* ─── COLOUR TOKENS ─────────────────────────────────────── */
-/* indigo */
-.h0 { background: #ede9fe; color: #5b21b6; } .n0 { background: #6d28d9; } .b0 { border-color: #c4b5fd; }
-/* sky */
-.h1 { background: #e0f2fe; color: #0369a1; } .n1 { background: #0284c7; } .b1 { border-color: #7dd3fc; }
-/* teal */
-.h2 { background: #ccfbf1; color: #0f766e; } .n2 { background: #0d9488; } .b2 { border-color: #5eead4; }
-/* amber */
-.h3 { background: #fef3c7; color: #92400e; } .n3 { background: #d97706; } .b3 { border-color: #fcd34d; }
-/* rose */
-.h4 { background: #ffe4e6; color: #9f1239; } .n4 { background: #e11d48; } .b4 { border-color: #fda4af; }
-/* green */
-.h5 { background: #d1fae5; color: #065f46; } .n5 { background: #059669; } .b5 { border-color: #6ee7b7; }
-
-.t1 { color: #0284c7; } .t2 { color: #0d9488; }
-
-/* ─── LEGEND ─────────────────────────────────────────────── */
-.legend {
-  display: flex; flex-wrap: wrap; gap: 12px;
-  padding: 12px 20px 16px;
-  border-top: 1px solid var(--border);
-}
-.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--mute); }
-.legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-/* ─── RESPONSIVE ─────────────────────────────────────────── */
-@media (max-width: 767px) {
-  .mobile-view  { display: block;  padding: 12px 14px 24px; }
-  .desktop-view { display: none; }
-  .legend { padding: 10px 14px 14px; }
-  .phase-body  { padding: 10px 12px 12px; }
-  .accordion-body { padding: 0 12px 12px; }
-}
+.accordion-body.open { display: block; }
+.accordion-body ul { padding-left: 18px; margin-top: 6px; }
+.accordion-body li { margin-bottom: 4px; }
 </style>
 </head>
 <body>
 
 <header class="page-header">
-  <span class="page-title">Workflow: Адаптивный курс</span>
-  <span class="page-sub">От УМП (PDF) до запуска — 19 шагов</span>
+  <div class="page-title">Как создаётся адаптивный курс</div>
+  <div class="page-sub">Полный путь от учебника до запущенного курса для студентов</div>
 </header>
 
-<!-- ═══════════════════════════════════════════════════════
-     MOBILE VIEW — accordion
-════════════════════════════════════════════════════════ -->
-<div class="mobile-view">
 
-  <!-- 0 -->
-  <div class="accordion b0">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n0">0</span>
-      Источник: УМП PDF
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="item-sub" style="margin:10px 0 6px">Учебно-методическое пособие. Содержит:</div>
-      <div class="steps-list">
-        <div class="step-row sr-info"><div class="step-text"><strong>Теоретические разделы</strong> — HTML-текст + иллюстрации</div></div>
-        <div class="step-row sr-q"><div class="step-text"><strong>Клинические сценарии</strong> — история болезни, вопросы, ответы</div></div>
-        <div class="step-row sr-itog"><div class="step-text"><strong>Видеолекции</strong> — Kinescope ID</div></div>
+<!-- ═══════════════════════════════════════════════════
+     DESKTOP LAYOUT
+════════════════════════════════════════════════════ -->
+<div class="page-scroll desktop-only">
+
+  <!-- PHASE 1: Source -->
+  <div class="phase-label">① Откуда берётся контент</div>
+  <div class="grid-3">
+    <div class="card card-purple">
+      <span class="card-icon">📖</span>
+      <div class="tag tag-purple">Основа</div>
+      <div class="card-title">Учебно-методическое пособие</div>
+      <div class="card-body">Учебник по теме курса в формате PDF. Из него берётся всё — тексты, картинки, клинические случаи.</div>
+    </div>
+    <div class="card card-purple">
+      <span class="card-icon">📋</span>
+      <div class="tag tag-purple">Структура</div>
+      <div class="card-title">Три типа материала</div>
+      <div class="card-body">
+        <ul>
+          <li><strong>Теоретические разделы</strong> — объяснения, таблицы, иллюстрации</li>
+          <li><strong>Клинические случаи</strong> — истории болезни с вопросами врача</li>
+          <li><strong>Видеолекции</strong> — записи на платформе Kinescope</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card card-purple">
+      <span class="card-icon">✂️</span>
+      <div class="tag tag-purple">Разбор</div>
+      <div class="card-title">Раскладываем по файлам</div>
+      <div class="card-body">Каждый клинический случай оформляется в отдельный файл-сценарий. Каждый теоретический раздел — в текстовый материал. Видео остаётся ссылкой.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Создаём тесты</div>
+
+  <!-- PHASE 2: Tests -->
+  <div class="phase-label">② Два вида тестов</div>
+  <div class="grid-2">
+
+    <!-- Main test -->
+    <div class="card card-blue">
+      <span class="card-icon">🏥</span>
+      <div class="tag tag-blue">Основной тест</div>
+      <div class="card-title">Клинический разбор — 23 шага</div>
+      <div class="card-body">
+        Студент становится врачом и ведёт пациента от первого приёма до выписки. Тест чередует информацию и вопросы:
+      </div>
+      <div class="steps-strip">
+        <div class="step-chip chip-info">📄 Жалобы пациента</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">🧪 Анализы</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">📡 Диагностика</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">🔍 Диагноз</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">💊 Лечение</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">📊 Наблюдение</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-итог">✅ Итог</div>
+      </div>
+      <div class="note note-blue" style="margin-top:12px">Порог прохождения — 70%. Каждый информационный шаг сопровождается картинкой из учебника, если она есть.</div>
+    </div>
+
+    <!-- Additional test -->
+    <div class="card card-teal">
+      <span class="card-icon">📝</span>
+      <div class="tag tag-teal">Дополнительный тест</div>
+      <div class="card-title">Теоретические вопросы — если провалил основной</div>
+      <div class="card-body">
+        Если студент не прошёл клинический разбор, открывается дополнительный тест. Он проверяет теорию того же раздела — без истории болезни, просто вопросы по знаниям:
+      </div>
+      <div class="steps-strip">
+        <div class="step-chip chip-info">📌 Вводный слайд</div>
+        <div class="step-chip chip-q">❓ Вопрос 1</div>
+        <div class="step-chip chip-q">❓ Вопрос 2</div>
+        <div class="step-chip chip-q">❓ ···</div>
+        <div class="step-chip chip-q">❓ Вопрос N</div>
+        <div class="step-chip chip-итог">✅ Итог</div>
+      </div>
+      <div class="note note-green" style="margin-top:12px">Тест создаётся из того же раздела учебника, что и основной. Не повторяет клинический сценарий — только знания. Тоже порог 70%.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Добавляем иллюстрации</div>
+
+  <!-- PHASE 3: Images -->
+  <div class="phase-label">③ Картинки из учебника</div>
+  <div class="grid-4">
+    <div class="card card-amber">
+      <span class="card-icon">🖼️</span>
+      <div class="tag tag-amber">Шаг 1</div>
+      <div class="card-title">Извлекаем из PDF</div>
+      <div class="card-body">PDF-парсер вытаскивает все изображения. Из ~26 файлов отбираем 19 полезных — убираем технические артефакты и дубли.</div>
+    </div>
+    <div class="card card-amber">
+      <span class="card-icon">⚡</span>
+      <div class="tag tag-amber">Шаг 2</div>
+      <div class="card-title">Сжимаем для быстрой загрузки</div>
+      <div class="card-body">Каждая картинка уменьшается и сжимается автоматически. Итог: суммарный вес снизился почти вдвое (−48%) — страницы грузятся быстрее.</div>
+    </div>
+    <div class="card card-amber">
+      <span class="card-icon">☁️</span>
+      <div class="tag tag-amber">Шаг 3</div>
+      <div class="card-title">Загружаем на платформу</div>
+      <div class="card-body">Каждая картинка загружается на сервер под своим именем. Адрес картинки не меняется при обновлении — удобно для правок.</div>
+    </div>
+    <div class="card card-amber">
+      <span class="card-icon">📐</span>
+      <div class="tag tag-amber">Шаг 4</div>
+      <div class="card-title">Расставляем по местам</div>
+      <div class="card-body">Каждая картинка идёт в тот текстовый материал, где она объясняется. Не перед текстом, а после — сначала читаем, потом смотрим схему.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Настраиваем организацию и пользователей</div>
+
+  <!-- PHASE 4: Org + Users -->
+  <div class="phase-label">④ Создаём организацию и студентов</div>
+  <div class="grid-4">
+    <div class="card card-rose">
+      <span class="card-icon">🏢</span>
+      <div class="tag tag-rose">Компания</div>
+      <div class="card-title">Регистрируем организацию</div>
+      <div class="card-body">На платформе создаётся организация (например, «Эвоген»). Это верхний уровень — под неё потом создаются отдел и группа.</div>
+    </div>
+    <div class="card card-rose">
+      <span class="card-icon">🏗️</span>
+      <div class="tag tag-rose">Отдел</div>
+      <div class="card-title">Добавляем подразделение</div>
+      <div class="card-body">Внутри организации создаётся учебный отдел (например, «Учебный центр»). Он нужен для структуры, не для доступа к курсу.</div>
+    </div>
+    <div class="card card-rose">
+      <span class="card-icon">👥</span>
+      <div class="tag tag-rose">Группа</div>
+      <div class="card-title">Создаём учебную группу</div>
+      <div class="card-body">Группа — это список студентов, которые проходят данный курс. Курс будет привязан именно к группе.</div>
+    </div>
+    <div class="card card-rose">
+      <span class="card-icon">🔑</span>
+      <div class="tag tag-rose">Студенты</div>
+      <div class="card-title">Генерируем логины и пароли</div>
+      <div class="card-body">Платформа создаёт нужное количество учётных записей (например, 30 штук) с автоматически сгенерированными паролями. Все данные сохраняются в файл.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Собираем курс и запускаем</div>
+
+  <!-- PHASE 5: Course -->
+  <div class="phase-label">⑤ Собираем и запускаем курс</div>
+  <div class="grid-3">
+    <div class="card card-green">
+      <span class="card-icon">🧩</span>
+      <div class="tag tag-green">Сборка</div>
+      <div class="card-title">Выстраиваем цепочку шагов</div>
+      <div class="card-body">
+        Все материалы, видео и тесты собираются в линейную адаптивную цепочку. Порядок задаётся в спецификации курса:
+        <div class="flow-strip" style="margin-top:10px">
+          <div class="flow-box fb-mat">📄 Материал</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-vid">🎥 Видео</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-test">📝 Тест</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-mat">📄 Материал</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-test">📝 Тест</div>
+          <div class="flow-arrow">→</div>
+          <span style="color:#94a3b8;font-size:13px">···</span>
+        </div>
+      </div>
+    </div>
+    <div class="card card-green">
+      <span class="card-icon">🚀</span>
+      <div class="tag tag-green">Публикация</div>
+      <div class="card-title">Курс появляется на платформе</div>
+      <div class="card-body">Собранный курс загружается на платформу. Затем он привязывается к группе — и все студенты группы сразу видят его в своём личном кабинете.</div>
+      <div class="note note-green" style="margin-top:10px">Если что-то меняется (добавили тест, исправили текст) — курс обновляется без пересоздания. Студенты, уже проходящие его, не теряют прогресс.</div>
+    </div>
+    <div class="card card-green">
+      <span class="card-icon">🔄</span>
+      <div class="tag tag-green">Адаптивность</div>
+      <div class="card-title">Логика прохождения</div>
+      <div class="card-body">
+        <div class="flow-strip" style="flex-direction:column;align-items:flex-start;gap:5px">
+          <div style="display:flex;align-items:center;gap:7px"><div class="flow-box fb-test" style="padding:5px 10px;font-size:11px">📝 Тест</div><div class="flow-arrow">→</div><div class="flow-box fb-pass" style="padding:5px 10px;font-size:11px">≥ 70% ✓</div><div class="flow-arrow">→</div><div class="flow-box fb-next" style="padding:5px 10px;font-size:11px">Следующий шаг</div></div>
+          <div style="display:flex;align-items:center;gap:7px"><div class="flow-box fb-test" style="padding:5px 10px;font-size:11px">📝 Тест</div><div class="flow-arrow">→</div><div class="flow-box fb-fail" style="padding:5px 10px;font-size:11px">&lt; 70% ✗</div><div class="flow-arrow">→</div><div class="flow-box fb-extra" style="padding:5px 10px;font-size:11px">📝 Доп. тест</div></div>
+          <div style="padding-left:148px;display:flex;align-items:center;gap:7px">
+            <div class="flow-box fb-pass" style="padding:5px 10px;font-size:11px">≥ 70% ✓</div><div class="flow-arrow">→</div><div class="flow-box fb-next" style="padding:5px 10px;font-size:11px">Следующий шаг</div>
+          </div>
+          <div style="padding-left:148px;display:flex;align-items:center;gap:7px">
+            <div class="flow-box fb-fail" style="padding:5px 10px;font-size:11px">&lt; 70% ✗</div><div class="flow-arrow">→</div><div class="flow-box fb-extra" style="padding:5px 10px;font-size:11px">Снова доп. тест</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 1 -->
-  <div class="accordion b0">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n0">1</span>
-      scenario_NNN.json — клинический тест
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">// scenario_301.json
-{
-  "title": "ХВГС: клинический разбор",
-  "preliminary_html": "&lt;p&gt;Пациент 42 г.…&lt;/p&gt;",
-  "lab_results": [
-    {"name":"АЛТ","value":"87 Ед/л"}
-  ],
-  "questions": [
-    {
-      "text": "&lt;p&gt;Укажите…&lt;/p&gt;",
-      "answers": [
-        {"text":"…","correct":true},
-        {"text":"…","correct":false}
-      ]
-    }
-    // … всего 10 вопросов
-  ],
-  "treatment_question": { … },
-  "followup_question":  { … }
-}</div>
-    </div>
+  <!-- Result -->
+  <div class="result-card">
+    <strong>Что видит студент в итоге:</strong> он заходит в личный кабинет под своим логином, видит курс и проходит его шаг за шагом — сначала читает материал, смотрит видео, затем проходит тест по реальному клиническому случаю. Если не сдал — открывается дополнительный тест на теорию. Как только сдал его — идёт дальше. Застрять невозможно: дополнительный тест всегда открыт, пока не сдан.
   </div>
 
-  <!-- 2 -->
-  <div class="accordion b0">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n0">2</span>
-      CONTENT dict — дополнительный тест
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">CONTENT = {
-  "title": "Генетика АД-риска",
-  "subtitle": "Доп. тест: НФ1",
-  "questions": [
-    {
-      "text": "&lt;p&gt;Тип наследования НФ1?&lt;/p&gt;",
-      "answers": [
-        {"text":"АД","correct":True},
-        {"text":"АР","correct":False}
-      ]
-    }
-    // … 5–12 вопросов
-  ]
-}</div>
-    </div>
+</div><!-- /desktop -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     MOBILE LAYOUT — accordion
+════════════════════════════════════════════════════ -->
+<div class="mobile-only">
+
+<div class="phase-label">① Откуда берётся контент</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">📖</span> Учебно-методическое пособие
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Учебник по теме курса в PDF. Из него берётся всё — тексты, картинки, клинические случаи.<br><br>
+    <strong>Три типа материала:</strong>
+    <ul>
+      <li><strong>Теоретические разделы</strong> — объяснения и иллюстрации</li>
+      <li><strong>Клинические случаи</strong> — истории болезни с вопросами</li>
+      <li><strong>Видеолекции</strong> — записи на Kinescope</li>
+    </ul>
+    <div class="note note-blue">Каждый клинический случай оформляется в отдельный файл-сценарий, каждый теоретический раздел — в текстовый материал.</div>
   </div>
-
-  <!-- 3 -->
-  <div class="accordion b0">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n0">3</span>
-      course_spec_NNN.json — спецификация
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">// adaptive.steps
-[
- {"type":"text",
-  "title":"Молекулярные основы",
-  "text_body":"&lt;h2&gt;…&lt;/h2&gt;"},
- {"type":"video",
-  "url":"https://kinescope.io/…"},
- {"type":"test",
-  "test_id": 1300,
-  "pass_threshold": 70,
-  "remedial_test_ids":[1308]}
-]</div>
-      <div class="rule rule-red">⛔ СТОП если test_id ≤ 0 — фабрика падает до любых записей</div>
-    </div>
-  </div>
-
-  <!-- 4 -->
-  <div class="accordion b1">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n1">4</span>
-      build_full_json — 23 шага клин. теста
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="item-sub" style="margin:10px 0 6px">Каждый шаг — body объект:</div>
-      <div class="code">{
-  "ContentText": "&lt;p&gt;…&lt;/p&gt;",
-  "ContentAnswers": [     // только вопросы
-    {"text":"…","correct":true}
-  ],
-  "ContentImage": {       // при наличии
-    "image_url":"/files/УМП_03.jpg"
-  }
-}</div>
-      <div class="divider"></div>
-      <div class="item-sub" style="margin-bottom:5px"><strong>Структура 23 шагов:</strong></div>
-      <div class="steps-list">
-        <div class="step-row sr-info"><div class="step-num t1">1</div><div class="step-text">Дисклеймер</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">2</div><div class="step-text">Жалобы и анамнез</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">3</div><div class="step-text">Вопрос по предв. данным</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">4</div><div class="step-text">Лабораторные данные + таблица</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">5</div><div class="step-text">Вопрос по лаб. данным</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">6</div><div class="step-text">Инструментальная диагностика</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">7</div><div class="step-text">Вопрос по инстр. данным</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">8</div><div class="step-text">Клинический статус</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">9</div><div class="step-text">Вопрос по клин. картине</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">10</div><div class="step-text">Постановка диагноза</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">11</div><div class="step-text">Вопрос: выбор диагноза</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">12–14</div><div class="step-text">Доп. клинические разборы</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">15–19</div><div class="step-text">Вопросы лечения, тактики, генетики</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">20</div><div class="step-text">Резюме лечения / МГК</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">21–22</div><div class="step-text">Вопросы наблюдения / профилактики</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-itog"><div class="step-num" style="color:#059669">23</div><div class="step-text">Итог — closeSession</div><div class="step-kind">итог</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5 -->
-  <div class="accordion b1">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n1">5</span>
-      upload_scenario → API (осн. тест)
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/tests
-{"name":"2026 Генетика ДПО. НФ1",
- "is_active":true}
-→ test_id = 1300</div>
-      <div class="item-sub" style="margin:7px 0 4px">Затем ×23 раза:</div>
-      <div class="code">POST /admin/questions
-{
-  "test_id": 1300,
-  "question_type_id": 2,  // ← ВСЕГДА 2!
-  "is_active": true,
-  "seq_no": 3,
-  "internal_id": "s1300_q3",
-  "body": { "ContentText":…, "ContentAnswers":[…] }
-}</div>
-      <div class="rule rule-red">⚠ question_type_id=1 → right_answers=0 → bestPercent не считается → шаг не закроется</div>
-      <div class="item-sub" style="margin:7px 0 4px">Привязка к модулю:</div>
-      <div class="code">POST /admin/course-modules
-{"name":"Тесты курса 132"}
-→ module_id
-
-POST /admin/module-tests
-{"module_id":…,"test_id":1300}</div>
-      <div class="rule rule-yellow">⚠ Имя модуля уникально глобально — добавлять course_id!</div>
-    </div>
-  </div>
-
-  <!-- 6 -->
-  <div class="accordion b2">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n2">6</span>
-      exam_style_builder — доп. тест
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="item-sub" style="margin:10px 0 6px">Только теория, без клин. вступления:</div>
-      <div class="steps-list">
-        <div class="step-row sr-info"><div class="step-num t2">1</div><div class="step-text">Вводный слайд: тема + инструкция</div><div class="step-kind">intro</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">2…N+1</div><div class="step-text">Теоретические вопросы</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-itog"><div class="step-num" style="color:#059669">N+2</div><div class="step-text">Итог — closeSession</div><div class="step-kind">итог</div></div>
-      </div>
-      <div class="item-sub" style="margin:7px 0 4px">Body вопроса:</div>
-      <div class="code">{
-  "ContentText": "&lt;p&gt;Тип наследования?&lt;/p&gt;",
-  "ContentAnswers": [
-    {"text":"АД","correct":true},
-    {"text":"АР","correct":false}
-  ]
-  // ContentImage — не используется
-}</div>
-    </div>
-  </div>
-
-  <!-- 7 -->
-  <div class="accordion b2">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n2">7</span>
-      upload → API (доп. тест)
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/tests → test_id = 1308
-
-POST /admin/questions ×(N+2)
-{
-  "test_id": 1308,
-  "question_type_id": 2,
-  "seq_no": 2,
-  "internal_id": "s1308_q2",
-  "body": {…}
-}</div>
-      <div class="item-sub" style="margin:7px 0 4px">Обновление без удаления:</div>
-      <div class="code">GET /admin/test/{id}/questions
-PUT /admin/question/{qid} {body,seq_no}
-// ⚠ POST bulk → удаляет ВСЕ вопросы!</div>
-    </div>
-  </div>
-
-  <!-- 8 -->
-  <div class="accordion b2">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n2">8</span>
-      Привязка доп. теста к основному
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">// В adaptive.steps основного теста:
-{
-  "type": "test",
-  "test_id": 1300,
-  "pass_threshold": 70,
-  "remedial_test_ids": [1308]
-}</div>
-      <div class="rule rule-green">✓ done доп. теста = bestPercent ≥ 70% (не просто «была попытка»)</div>
-    </div>
-  </div>
-
-  <!-- 9 -->
-  <div class="accordion b3">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n3">9</span>
-      Извлечение изображений из PDF
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">~26 файлов извлечено парсером
-
-Отбор:
-  ✗ GIF 8×8 px — артефакты PDF
-  ✗ дубликаты
-  ✓ 19 полезных изображений</div>
-    </div>
-  </div>
-
-  <!-- 10 -->
-  <div class="accordion b3">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n3">10</span>
-      PIL сжатие
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">img.thumbnail((1400, 1400), LANCZOS)
-img.save(buf, format="JPEG",
-         quality=82, optimize=True,
-         progressive=True)
-
-# Файлы &lt; 100 KB — пропускаем
-# 2512 KB → 1317 KB (−48%)</div>
-    </div>
-  </div>
-
-  <!-- 11 -->
-  <div class="accordion b3">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n3">11</span>
-      Загрузка на сервер
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/file-storage/save
-  (multipart/form-data)
-  file: УМП_13.jpg
-  sub_dir: ""
-→ /files/УМП_13.jpg
-
-# Имя = ключ. Перезагрузка →
-# автозамена без смены URL.</div>
-    </div>
-  </div>
-
-  <!-- 12 -->
-  <div class="accordion b3">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n3">12</span>
-      Вставка картинок в text_body
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">&lt;h2&gt;Кариотип при трисомии 21&lt;/h2&gt;
-&lt;p&gt;При синдроме Дауна…&lt;/p&gt;
-&lt;img src="/files/УМП_07.jpg"
-  style="max-width:100%;border-radius:8px"
-  alt="Кариограмма трисомии 21"&gt;</div>
-      <div class="item-sub" style="margin-top:6px">Картинка — после объясняющего текста. ≤ 3–4 на шаг.</div>
-    </div>
-  </div>
-
-  <!-- 13 -->
-  <div class="accordion b4">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n4">13</span>
-      Фаза ORG — Компания
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/companies
-{"name":"Эвоген","city_id":1,"is_active":true}
-→ company_id = 35
-
-# Find-or-create по имени (идемпотентно)</div>
-    </div>
-  </div>
-
-  <!-- 14 -->
-  <div class="accordion b4">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n4">14</span>
-      Фаза ORG — Подразделение
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/divisions
-{"company_id":35, "name":"Учебный центр",
- "is_active":true}
-→ division_id = 20</div>
-    </div>
-  </div>
-
-  <!-- 15 -->
-  <div class="accordion b4">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n4">15</span>
-      Фаза ORG — Группа
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/groups
-{"company_id":35,
- "name":"ДПО 2026 Генетика",
- "is_division": false,   // ← для юзеров!
- "is_active": true}
-→ group_id = 37</div>
-      <div class="rule rule-red">⚠ division-groups НЕ вызывать — только для is_division=true → 500</div>
-    </div>
-  </div>
-
-  <!-- 16 -->
-  <div class="accordion b4">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n4">16</span>
-      Фаза USERS — создание пользователей
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/users/butch
-{"base_login":"evogen132_",
- "start_number":1, "count":30,
- "group_id":37, "division_id":20,
- "roles":["user-part","public-tests"]}
-→ [{login, password, id}, …×30]</div>
-      <div class="item-sub" style="margin:7px 0 4px">Если пользователи уже есть:</div>
-      <div class="code">// GET /users?login=X — НЕ работает!
-GET /admin/group/37/users → [id,…]
-PUT /admin/user/{id}/reset-password
-→ {login, password}</div>
-      <div class="rule rule-yellow">⚠ PUT /admin/user без is_active:true → молча ставит false</div>
-    </div>
-  </div>
-
-  <!-- 17 -->
-  <div class="accordion b5">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n5">17</span>
-      build_course_body — сборка тела курса
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">{
-  "materials": [
-    {"local_id":"m_178…557",
-     "kind":"text",
-     "title":"Молекулярные основы",
-     "text_body":"&lt;h2&gt;…&lt;/h2&gt;"},
-    {"local_id":"m_178…558",
-     "kind":"video",
-     "url":"https://kinescope.io/…"}
-  ],
-  "adaptive": {
-    "version":1, "enabled":true,
-    "steps": [
-      {"kind":"material",
-       "material_local_id":"m_178…557"},
-      {"kind":"test",
-       "test_id":1300,
-       "pass_threshold":70,
-       "remedial_test_ids":[1308]}
-    ]
-  }
-}</div>
-    </div>
-  </div>
-
-  <!-- 18 -->
-  <div class="accordion b5">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n5">18</span>
-      Фаза COURSE — создание курса
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/courses
-{"name":"2026 Генетика ДПО",
- "specialization_id":16,
- "is_active":true,
- "body": "{\"materials\":[…],…}"}
-         // ↑ СТРОКА, не объект!
-→ course_id = 132</div>
-      <div class="item-sub" style="margin:7px 0 4px">При обновлении шагов:</div>
-      <div class="code">body = json.loads(course["body"])  // обязательно!
-PUT /admin/course/132
-{"body": json.dumps(body)}</div>
-    </div>
-  </div>
-
-  <!-- 19 -->
-  <div class="accordion b5">
-    <button class="accordion-btn" onclick="toggle(this)">
-      <span class="num n5">19</span>
-      Фаза ASSIGN — назначение курса
-      <span class="chevron">▼</span>
-    </button>
-    <div class="accordion-body">
-      <div class="code">POST /admin/course-group-connections
-{"course_id":132, "group_id":37}
-
-# Все пользователи группы 37
-# теперь видят курс 132
-
-factory_result_live.json
-# → сохраняется после каждой фазы</div>
-      <div class="result-card" style="margin-top:10px">
-        <strong>Пользователь видит курс:</strong><br>
-        evogen132_7 / пароль из factory_result<br><br>
-        📄 Материал → ✅ Далее →<br>
-        🎥 Видео → ✅ Далее →<br>
-        📝 Тест (порог 70%)<br>
-        &nbsp;&nbsp;≥70% → следующий шаг<br>
-        &nbsp;&nbsp;&lt;70% → 🔁 Доп. тест<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;≥70% → тест закрыт<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;70% → снова доп. тест
-      </div>
-    </div>
-  </div>
-
-</div><!-- /mobile-view -->
-
-
-<!-- ═══════════════════════════════════════════════════════
-     DESKTOP VIEW — swimlane
-════════════════════════════════════════════════════════ -->
-<div class="desktop-view">
-<div class="page-scroll">
-
-<div class="lanes-header">
-  <div class="lane-h" style="background:#faf5ff;color:#6d28d9">① Подготовка контента</div>
-  <div class="lane-h" style="background:#f0f9ff;color:#0369a1">② Основной тест<br><small style="font-weight:400;font-size:8.5px">(клинический, 23 шага)</small></div>
-  <div class="lane-h" style="background:#f0fdfa;color:#0d9488">③ Доп. тест<br><small style="font-weight:400;font-size:8.5px">(экзам. формат)</small></div>
-  <div class="lane-h" style="background:#fffbeb;color:#b45309">④ Изображения</div>
-  <div class="lane-h" style="background:#fff1f2;color:#be123c">⑤ Организация</div>
-  <div class="lane-h" style="background:#f0fdf4;color:#047857">⑥ Курс и назначение</div>
 </div>
 
-<div class="lanes-body">
+<div class="phase-label">② Два вида тестов</div>
 
-<!-- LANE 1 -->
-<div class="lane">
-  <div class="phase b0">
-    <div class="phase-head h0"><span class="phase-num n0">0</span>Источник: УМП PDF</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:5px">Учебно-методическое пособие. Содержит:</div>
-      <div class="steps-list">
-        <div class="step-row sr-info"><div class="step-text"><strong>Теоретические разделы</strong> — HTML + иллюстрации</div></div>
-        <div class="step-row sr-q"><div class="step-text"><strong>Клинические сценарии</strong> — история болезни, вопросы</div></div>
-        <div class="step-row sr-itog"><div class="step-text"><strong>Видеолекции</strong> — Kinescope ID</div></div>
-      </div>
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🏥</span> Основной тест — клинический разбор
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Студент становится врачом и ведёт пациента от первого приёма до выписки. Тест из 23 шагов, которые чередуют информацию и вопросы:<br><br>
+    <div class="steps-strip">
+      <div class="step-chip chip-info">📄 Жалобы пациента</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">🧪 Анализы</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">📡 Диагностика</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">🔍 Диагноз</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">💊 Лечение</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-итог">✅ Итог</div>
     </div>
+    <div class="note note-blue">Порог прохождения — 70%. К каждому информационному шагу прикрепляется картинка из учебника, если она есть по теме.</div>
   </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b0">
-    <div class="phase-head h0"><span class="phase-num n0">1</span>scenario_NNN.json</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:4px">Клинический сценарий — один файл на тест:</div>
-      <div class="code">// scenario_301.json
-{
-  "title": "ХВГС",
-  "preliminary_html": "&lt;p&gt;Пациент…&lt;/p&gt;",
-  "lab_results": [
-    {"name":"АЛТ","value":"87 Ед/л"}
-  ],
-  "questions": [
-    {
-      "text": "&lt;p&gt;Укажите…&lt;/p&gt;",
-      "answers": [
-        {"text":"…","correct":true},
-        {"text":"…","correct":false}
-      ]
-    }
-    // … 10 вопросов
-  ],
-  "treatment_question": {…},
-  "followup_question": {…}
-}</div>
+</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">📝</span> Дополнительный тест — теория
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Если студент не прошёл клинический разбор, открывается дополнительный тест. Он проверяет теорию того же раздела — без истории болезни, просто вопросы:<br><br>
+    <div class="steps-strip">
+      <div class="step-chip chip-info">📌 Вводный слайд</div>
+      <div class="step-chip chip-q">❓ Вопрос 1</div>
+      <div class="step-chip chip-q">❓ ···</div>
+      <div class="step-chip chip-q">❓ Вопрос N</div>
+      <div class="step-chip chip-итог">✅ Итог</div>
     </div>
+    <div class="note note-green">Тест берётся из того же раздела учебника, что и основной. Не повторяет сценарий — только чистые знания. Тоже порог 70%.</div>
   </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b0">
-    <div class="phase-head h0"><span class="phase-num n0">2</span>CONTENT dict (доп. тест)</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:4px">Теоретические вопросы для доп. теста:</div>
-      <div class="code">CONTENT = {
-  "title": "Генетика АД-риска",
-  "subtitle": "Доп. тест: НФ1",
-  "questions": [
-    {
-      "text": "&lt;p&gt;Тип наследования НФ1?&lt;/p&gt;",
-      "answers": [
-        {"text":"АД","correct":True},
-        {"text":"АР","correct":False}
-      ]
-    }
-    // … 5–12 вопросов
-  ]
-}</div>
-    </div>
+</div>
+
+<div class="phase-label">③ Картинки из учебника</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🖼️</span> Как обрабатываются иллюстрации
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    <ul>
+      <li><strong>Извлекаем из PDF</strong> — парсер вытаскивает ~26 файлов, из них отбираем 19 полезных (убираем технические артефакты и дубли)</li>
+      <li><strong>Сжимаем</strong> — каждая картинка автоматически уменьшается. Суммарный вес снизился вдвое (−48%) — страницы грузятся быстрее</li>
+      <li><strong>Загружаем на сервер</strong> — у каждой картинки постоянный адрес, удобно для правок</li>
+      <li><strong>Расставляем по местам</strong> — картинка идёт после объясняющего текста, не перед ним</li>
+    </ul>
   </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b0">
-    <div class="phase-head h0"><span class="phase-num n0">3</span>course_spec_NNN.json</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:4px">Спецификация курса — org + users + steps:</div>
-      <div class="code">// adaptive.steps (фрагмент)
-[
- {"type":"text",
-  "title":"Молекулярные основы",
-  "text_body":"&lt;h2&gt;…&lt;/h2&gt;"},
- {"type":"video",
-  "url":"https://kinescope.io/…"},
- {"type":"test",
-  "test_id": 1300,
-  "pass_threshold": 70,
-  "remedial_test_ids":[1308]}
-]</div>
-      <div class="rule rule-red">⛔ СТОП если test_id ≤ 0 — фабрика падает до любых записей</div>
+</div>
+
+<div class="phase-label">④ Организация и студенты</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🏢</span> Создаём организацию
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    На платформе создаётся трёхуровневая структура:<br><br>
+    <ul>
+      <li><strong>Компания</strong> — верхний уровень (например, «Эвоген»)</li>
+      <li><strong>Подразделение</strong> — учебный отдел внутри компании</li>
+      <li><strong>Группа</strong> — список студентов, которые проходят курс. Именно к группе привязывается курс</li>
+    </ul>
+    <div class="note note-amber">Если организация уже создана — повторный запуск её не дублирует, а использует существующую.</div>
+  </div>
+</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🔑</span> Создаём учётные записи студентов
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Платформа создаёт нужное количество учётных записей (например, 30 штук) с автоматическими паролями. Все логины и пароли сохраняются в файл — их можно раздать студентам.<br><br>
+    Если запустить повторно — пароли не теряются, а сбрасываются и снова записываются в файл.
+  </div>
+</div>
+
+<div class="phase-label">⑤ Сборка и запуск курса</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🧩</span> Выстраиваем цепочку шагов
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Все материалы, видео и тесты собираются в линейную цепочку. Каждый студент проходит её последовательно — следующий шаг открывается только после завершения предыдущего:<br><br>
+    <div class="steps-strip">
+      <div class="step-chip chip-info">📄 Материал</div>
+      <div class="step-chip chip-info">🎥 Видео</div>
+      <div class="step-chip chip-q">📝 Тест</div>
+      <div class="step-chip chip-info">📄 Материал</div>
+      <div class="step-chip chip-q">📝 Тест</div>
+      <div class="step-chip" style="background:#f8fafc;border-color:#e2e8f0;color:#64748b">···</div>
     </div>
   </div>
 </div>
 
-<!-- LANE 2 -->
-<div class="lane">
-  <div class="phase b1">
-    <div class="phase-head h1"><span class="phase-num n1">4</span>build_full_json</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:5px">scenario_NNN.json → 23 шага. Тело каждого шага:</div>
-      <div class="code">{
-  "ContentText": "&lt;p&gt;…&lt;/p&gt;",
-  "ContentAnswers": [   // только вопросы
-    {"text":"…","correct":true}
-  ],
-  "ContentImage": {     // при наличии
-    "image_url":"/files/УМП_03.jpg"
-  }
-}</div>
-      <div class="divider"></div>
-      <div class="item-sub" style="margin-bottom:4px"><strong>Структура 23 шагов:</strong></div>
-      <div class="steps-list">
-        <div class="step-row sr-info"><div class="step-num t1">1</div><div class="step-text">Дисклеймер</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">2</div><div class="step-text">Жалобы, анамнез</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">3</div><div class="step-text">Вопрос по предв. данным</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">4</div><div class="step-text">Лаб. данные + таблица</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">5</div><div class="step-text">Вопрос по лаб. данным</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">6</div><div class="step-text">Инструм. диагностика</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">7</div><div class="step-text">Вопрос по инстр. данным</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">8</div><div class="step-text">Клинический статус</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">9</div><div class="step-text">Вопрос по клин. картине</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">10</div><div class="step-text">Постановка диагноза</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">11</div><div class="step-text">Выбор диагноза</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">12–14</div><div class="step-text">Доп. клин. разборы</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">15–19</div><div class="step-text">Лечение, тактика, генетика</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-info"><div class="step-num t1">20</div><div class="step-text">Резюме / МГК</div><div class="step-kind">info</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">21–22</div><div class="step-text">Наблюдение / профилактика</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-itog"><div class="step-num" style="color:#059669">23</div><div class="step-text">Итог — closeSession</div><div class="step-kind">итог</div></div>
-      </div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b1">
-    <div class="phase-head h1"><span class="phase-num n1">5</span>upload_scenario → API</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/tests
-{"name":"2026 Генетика ДПО. НФ1",
- "is_active":true}
-→ test_id = 1300</div>
-      <div class="item-sub" style="margin:6px 0 4px">Затем <strong>×23</strong> раза:</div>
-      <div class="code">POST /admin/questions
-{
-  "test_id": 1300,
-  "question_type_id": 2,  // ← ВСЕГДА 2!
-  "is_active": true,
-  "seq_no": 3,
-  "internal_id": "s1300_q3",
-  "body": {
-    "ContentText": "…",
-    "ContentAnswers": […]
-  }
-}</div>
-      <div class="rule rule-red">⚠ qtype=1 → right_answers=0 → bestPercent не считается</div>
-      <div class="divider"></div>
-      <div class="code">POST /admin/course-modules
-{"name":"Тесты курса 132"}  // уникально!
-POST /admin/module-tests
-{"module_id":…,"test_id":1300}</div>
-    </div>
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🚀</span> Курс появляется у студентов
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Курс загружается на платформу и привязывается к группе — все студенты группы сразу видят его в личном кабинете.<br><br>
+    Если что-то меняется (добавили тест, исправили текст) — курс обновляется без пересоздания. Студенты, уже проходящие его, не теряют прогресс.
   </div>
 </div>
 
-<!-- LANE 3 -->
-<div class="lane">
-  <div class="phase b2">
-    <div class="phase-head h2"><span class="phase-num n2">6</span>exam_style_builder</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:5px">Только теория, без клин. вступления:</div>
-      <div class="steps-list">
-        <div class="step-row sr-info"><div class="step-num t2">1</div><div class="step-text">Вводный слайд + инструкция</div><div class="step-kind">intro</div></div>
-        <div class="step-row sr-q"><div class="step-num" style="color:#7c3aed">2…N+1</div><div class="step-text">Теоретические вопросы</div><div class="step-kind">вопрос</div></div>
-        <div class="step-row sr-itog"><div class="step-num" style="color:#059669">N+2</div><div class="step-text">Итог — closeSession</div><div class="step-kind">итог</div></div>
-      </div>
-      <div class="divider"></div>
-      <div class="item-sub" style="margin-bottom:4px">Body вопроса:</div>
-      <div class="code">{
-  "ContentText":
-    "&lt;p&gt;Тип наследования НФ1?&lt;/p&gt;",
-  "ContentAnswers": [
-    {"text":"АД","correct":true},
-    {"text":"АР","correct":false}
-  ]
-  // ContentImage — не используется
-}</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b2">
-    <div class="phase-head h2"><span class="phase-num n2">7</span>upload → API (доп. тест)</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/tests → test_id = 1308
-
-POST /admin/questions ×(N+2)
-{
-  "test_id": 1308,
-  "question_type_id": 2,
-  "seq_no": 2,
-  "internal_id": "s1308_q2",
-  "body": {…}
-}</div>
-      <div class="divider"></div>
-      <div class="item-sub" style="margin-bottom:4px">Обновление существующего вопроса:</div>
-      <div class="code">GET /admin/test/{id}/questions
-PUT /admin/question/{qid}
-{"body":…, "seq_no":…}
-// ⚠ POST bulk → удаляет ВСЕ вопросы!</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b2">
-    <div class="phase-head h2"><span class="phase-num n2">8</span>Привязка к осн. тесту</div>
-    <div class="phase-body">
-      <div class="code">// В adaptive.steps:
-{
-  "type": "test",
-  "test_id": 1300,
-  "pass_threshold": 70,
-  "remedial_test_ids": [1308]
-  // разблокируется при &lt;70%
-}</div>
-      <div class="rule rule-green">✓ done = bestPercent ≥ 70% (не просто «была попытка»)</div>
-    </div>
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🔄</span> Логика прохождения
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    <ul>
+      <li>Студент сдал основной тест (≥ 70%) → переходит дальше</li>
+      <li>Провалил основной тест (&lt; 70%) → открывается дополнительный тест на теорию</li>
+      <li>Сдал дополнительный (≥ 70%) → переходит дальше</li>
+      <li>Провалил дополнительный → снова дополнительный тест</li>
+    </ul>
+    <div class="note note-green">Студент не может «застрять» навсегда — дополнительный тест всегда открыт и доступен столько раз, сколько нужно.</div>
   </div>
 </div>
 
-<!-- LANE 4 -->
-<div class="lane">
-  <div class="phase b3">
-    <div class="phase-head h3"><span class="phase-num n3">9</span>Извлечение из PDF</div>
-    <div class="phase-body">
-      <div class="code">~26 файлов парсером
-
-  ✗ GIF 8×8 px — артефакты
-  ✗ дубликаты
-  ✓ 19 полезных изображений</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b3">
-    <div class="phase-head h3"><span class="phase-num n3">10</span>PIL сжатие</div>
-    <div class="phase-body">
-      <div class="code">img.thumbnail((1400, 1400), LANCZOS)
-img.save(buf, "JPEG",
-  quality=82, optimize=True,
-  progressive=True)
-
-# &lt;100 KB — пропускаем
-# 2512 KB → 1317 KB (−48%)</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b3">
-    <div class="phase-head h3"><span class="phase-num n3">11</span>Загрузка</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/file-storage/save
-  file: УМП_13.jpg
-  sub_dir: ""
-→ /files/УМП_13.jpg
-
-# Имя = ключ хранилища</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b3">
-    <div class="phase-head h3"><span class="phase-num n3">12</span>Вставка в text_body</div>
-    <div class="phase-body">
-      <div class="code">&lt;h2&gt;Кариотип Т21&lt;/h2&gt;
-&lt;p&gt;При синдроме Дауна…&lt;/p&gt;
-&lt;img src="/files/УМП_07.jpg"
-  style="max-width:100%"
-  alt="Кариограмма"&gt;</div>
-      <div class="item-sub" style="margin-top:5px">После текста · ≤ 3–4 на шаг</div>
-    </div>
-  </div>
+<div class="result-card" style="margin:4px 16px 24px">
+  <strong>Что видит студент в итоге:</strong> он заходит под своим логином, видит курс и проходит его шаг за шагом — читает материал, смотрит видео, проходит клинический тест. Если не сдал — открывается теоретический тест. Как только сдал — идёт дальше.
 </div>
 
-<!-- LANE 5 -->
-<div class="lane">
-  <div class="phase b4">
-    <div class="phase-head h4"><span class="phase-num n4">13</span>ORG — Компания</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/companies
-{"name":"Эвоген","city_id":1,
- "is_active":true}
-→ company_id = 35
+</div><!-- /mobile -->
 
-# Find-or-create по имени</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b4">
-    <div class="phase-head h4"><span class="phase-num n4">14</span>ORG — Подразделение</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/divisions
-{"company_id":35,
- "name":"Учебный центр",
- "is_active":true}
-→ division_id = 20</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b4">
-    <div class="phase-head h4"><span class="phase-num n4">15</span>ORG — Группа</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/groups
-{"company_id":35,
- "name":"ДПО 2026 Генетика",
- "is_division": false,
- "is_active": true}
-→ group_id = 37</div>
-      <div class="rule rule-red">⚠ division-groups НЕ вызывать → 500</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b4">
-    <div class="phase-head h4"><span class="phase-num n4">16</span>USERS — пользователи</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/users/butch
-{"base_login":"evogen132_",
- "start_number":1,"count":30,
- "group_id":37,"division_id":20,
- "roles":["user-part","public-tests"]}
-→ [{login,password,id},…×30]</div>
-      <div class="item-sub" style="margin:6px 0 4px">Если уже есть:</div>
-      <div class="code">GET /admin/group/37/users
-PUT /admin/user/{id}/reset-password
-→ {login,password}</div>
-      <div class="rule rule-yellow">⚠ PUT без is_active:true → молча ставит false</div>
-    </div>
-  </div>
-</div>
-
-<!-- LANE 6 -->
-<div class="lane">
-  <div class="phase b5">
-    <div class="phase-head h5"><span class="phase-num n5">17</span>build_course_body</div>
-    <div class="phase-body">
-      <div class="item-sub" style="margin-bottom:4px">Из spec.steps → body курса:</div>
-      <div class="code">{
-  "materials": [
-    {"local_id":"m_178…557",
-     "kind":"text",
-     "text_body":"&lt;h2&gt;…&lt;/h2&gt;"},
-    {"local_id":"m_178…558",
-     "kind":"video",
-     "url":"https://kinescope.io/…"}
-  ],
-  "adaptive": {
-    "version":1,"enabled":true,
-    "steps":[
-      {"kind":"material",
-       "material_local_id":"m_557"},
-      {"kind":"test",
-       "test_id":1300,
-       "pass_threshold":70,
-       "remedial_test_ids":[1308]}
-    ]
-  }
-}</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b5">
-    <div class="phase-head h5"><span class="phase-num n5">18</span>COURSE — создание</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/courses
-{"name":"2026 Генетика ДПО",
- "specialization_id":16,
- "is_active":true,
- "body":"{\"materials\":[…]}"}
-//      ↑ СТРОКА, не объект!
-→ course_id = 132</div>
-      <div class="item-sub" style="margin:6px 0 4px">Обновление шагов:</div>
-      <div class="code">body = json.loads(course["body"])
-# обязательный json.loads!
-PUT /admin/course/132
-{"body":json.dumps(body)}</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase b5">
-    <div class="phase-head h5"><span class="phase-num n5">19</span>ASSIGN — назначение</div>
-    <div class="phase-body">
-      <div class="code">POST /admin/course-group-connections
-{"course_id":132,"group_id":37}
-
-factory_result_live.json
-# сохраняется после каждой фазы</div>
-    </div>
-  </div>
-  <div class="arrow-down">↓</div>
-  <div class="phase" style="border:2px solid #6ee7b7">
-    <div class="phase-head h5"><span class="phase-num n5">✓</span>Пользователь видит курс</div>
-    <div class="phase-body">
-      <div class="result-card">
-        <strong>evogen132_7</strong> / пароль<br>
-        📄 Материал → ✅ Далее →<br>
-        🎥 Видео → ✅ Далее →<br>
-        📝 Тест (порог 70%)<br>
-        &nbsp;≥70% → следующий шаг<br>
-        &nbsp;&lt;70% → 🔁 Доп. тест<br>
-        &nbsp;&nbsp;≥70% → тест закрыт<br>
-        &nbsp;&nbsp;&lt;70% → снова доп. тест
-      </div>
-    </div>
-  </div>
-</div>
-
-</div><!-- /lanes-body -->
-</div><!-- /page-scroll -->
-</div><!-- /desktop-view -->
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#6d28d9"></div>Подготовка контента</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#0284c7"></div>Основной тест</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#0d9488"></div>Дополнительный тест</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Изображения</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#e11d48"></div>Организация</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#059669"></div>Курс и назначение</div>
-  <div class="legend-item" style="margin-left:auto">
-    <span style="font-size:9.5px;color:#94a3b8">Adaptive Course Workflow · med-game.ru</span>
-  </div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Контент из учебника</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Основные тесты</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div>Дополнительные тесты</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Изображения</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f43f5e"></div>Организация</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Сборка курса</div>
+  <div class="legend-item" style="margin-left:auto"><span style="font-size:10px;color:#94a3b8">med-game.ru · Adaptive Course</span></div>
 </div>
 
 <script>
-function toggle(btn) {
+function tog(btn) {
   btn.classList.toggle('open');
   btn.nextElementSibling.classList.toggle('open');
 }
 </script>
+
 </body>
 </html>
