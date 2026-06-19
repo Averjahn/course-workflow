@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Как создаётся адаптивный курс</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #fafafa;
+  --fg: #0f172a;
+  --mute: #64748b;
+  --border: #e2e8f0;
+  --card: #ffffff;
+  --radius: 14px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ─── HEADER ─────────────────────────────────────────────── */
+.page-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px 16px;
+}
+.page-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--fg);
+  margin-bottom: 4px;
+  letter-spacing: -.02em;
+}
+.page-sub {
+  font-size: 13px;
+  color: var(--mute);
+}
+
+/* ─── PHASE LABEL ────────────────────────────────────────── */
+.phase-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--mute);
+  padding: 20px 24px 6px;
+}
+
+/* ─── CARD ───────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 0 16px 10px;
+}
+.card-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+  display: block;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.card-body {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+}
+.card-body ul {
+  padding-left: 18px;
+  margin-top: 5px;
+}
+.card-body li { margin-bottom: 3px; }
+
+/* card accent borders */
+.card-purple { border-left: 4px solid #8b5cf6; }
+.card-blue   { border-left: 4px solid #3b82f6; }
+.card-teal   { border-left: 4px solid #14b8a6; }
+.card-amber  { border-left: 4px solid #f59e0b; }
+.card-rose   { border-left: 4px solid #f43f5e; }
+.card-green  { border-left: 4px solid #22c55e; }
+.card-indigo { border-left: 4px solid #6366f1; }
+
+/* tag */
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-bottom: 8px;
+}
+.tag-purple { background: #ede9fe; color: #6d28d9; }
+.tag-blue   { background: #dbeafe; color: #1d4ed8; }
+.tag-teal   { background: #ccfbf1; color: #0f766e; }
+.tag-amber  { background: #fef3c7; color: #92400e; }
+.tag-rose   { background: #ffe4e6; color: #9f1239; }
+.tag-green  { background: #dcfce7; color: #15803d; }
+.tag-indigo { background: #e0e7ff; color: #4338ca; }
+
+/* ─── ARROW ──────────────────────────────────────────────── */
+.arrow {
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 20px;
+  padding: 2px 0;
+}
+
+/* ─── STEPS STRIP (for test breakdown) ───────────────────── */
+.steps-strip {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.step-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.chip-info  { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.chip-q     { background: #f5f3ff; border-color: #ddd6fe; color: #7c3aed; }
+.chip-итог  { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+
+/* ─── FLOW STRIP (for adaptive logic) ───────────────────── */
+.flow-strip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  row-gap: 8px;
+}
+.flow-box {
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+.flow-arrow {
+  font-size: 14px;
+  color: #94a3b8;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.fb-mat   { background: #eff6ff; color: #1d4ed8; }
+.fb-vid   { background: #faf5ff; color: #7c3aed; }
+.fb-test  { background: #fff7ed; color: #c2410c; }
+.fb-pass  { background: #f0fdf4; color: #15803d; }
+.fb-fail  { background: #fff1f2; color: #be123c; }
+.fb-extra { background: #ccfbf1; color: #0f766e; }
+.fb-next  { background: #f0fdf4; color: #15803d; }
+
+/* ─── NOTE BOX ───────────────────────────────────────────── */
+.note {
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 10px;
+  font-weight: 500;
+  border-left: 3px solid;
+}
+.note-blue  { background: #eff6ff; border-color: #60a5fa; color: #1e40af; }
+.note-green { background: #f0fdf4; border-color: #4ade80; color: #166534; }
+.note-amber { background: #fffbeb; border-color: #fbbf24; color: #92400e; }
+
+/* ─── RESULT ─────────────────────────────────────────────── */
+.result-card {
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 0 16px 24px;
+  font-size: 13px;
+  color: #14532d;
+  line-height: 1.7;
+}
+.result-card strong { font-weight: 700; }
+
+/* ─── DESKTOP GRID ───────────────────────────────────────── */
+@media (min-width: 900px) {
+  body { background: #f1f5f9; }
+  .page-header { padding: 24px 40px 18px; }
+  .page-title { font-size: 22px; }
+
+  .mobile-only { display: none !important; }
+
+  .page-scroll {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .grid-span2 { grid-column: span 2; }
+
+  .card { margin: 0; height: 100%; }
+  .phase-label { padding: 24px 0 8px; font-size: 10px; }
+  .phase-label:first-child { padding-top: 8px; }
+  .result-card { margin: 14px 0 0; }
+
+  .arrow { display: none; }
+
+  /* section divider */
+  .section-arrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .section-arrow::before,
+  .section-arrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+}
+
+@media (max-width: 899px) {
+  .desktop-only { display: none !important; }
+  .page-scroll { padding-bottom: 32px; }
+  .section-arrow { display: none; }
+}
+
+/* ─── LEGEND ─────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  margin-top: 4px;
+}
+@media (min-width: 900px) {
+  .legend { padding: 14px 32px 20px; max-width: 1240px; margin: 4px auto 0; }
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--mute); font-weight: 500;
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── ACCORDION (mobile) ─────────────────────────────────── */
+.accordion-wrap { margin: 0 16px 10px; }
+.accordion-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fg);
+  transition: border-color .15s;
+}
+.accordion-btn.open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: var(--border);
+}
+.accordion-btn .icon { font-size: 20px; flex-shrink: 0; }
+.accordion-btn .chevron { margin-left: auto; color: var(--mute); font-size: 11px; transition: transform .2s; }
+.accordion-btn.open .chevron { transform: rotate(180deg); }
+.accordion-body {
+  display: none;
+  padding: 14px 16px 16px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-top: none;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+}
+.accordion-body.open { display: block; }
+.accordion-body ul { padding-left: 18px; margin-top: 6px; }
+.accordion-body li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-title">Как создаётся адаптивный курс</div>
+  <div class="page-sub">Полный путь от учебника до запущенного курса для студентов</div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════
+     DESKTOP LAYOUT
+════════════════════════════════════════════════════ -->
+<div class="page-scroll desktop-only">
+
+  <!-- PHASE 1: Source -->
+  <div class="phase-label">① Откуда берётся контент</div>
+  <div class="grid-3">
+    <div class="card card-purple">
+      <span class="card-icon">📖</span>
+      <div class="tag tag-purple">Основа</div>
+      <div class="card-title">Учебно-методическое пособие</div>
+      <div class="card-body">Учебник по теме курса в формате PDF. Из него берётся всё — тексты, картинки, клинические случаи.</div>
+    </div>
+    <div class="card card-purple">
+      <span class="card-icon">📋</span>
+      <div class="tag tag-purple">Структура</div>
+      <div class="card-title">Три типа материала</div>
+      <div class="card-body">
+        <ul>
+          <li><strong>Теоретические разделы</strong> — объяснения, таблицы, иллюстрации</li>
+          <li><strong>Клинические случаи</strong> — истории болезни с вопросами врача</li>
+          <li><strong>Видеолекции</strong> — записи на платформе Kinescope</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card card-purple">
+      <span class="card-icon">✂️</span>
+      <div class="tag tag-purple">Разбор</div>
+      <div class="card-title">Раскладываем по файлам</div>
+      <div class="card-body">Каждый клинический случай оформляется в отдельный файл-сценарий. Каждый теоретический раздел — в текстовый материал. Видео остаётся ссылкой.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Создаём тесты</div>
+
+  <!-- PHASE 2: Tests -->
+  <div class="phase-label">② Два вида тестов</div>
+  <div class="grid-2">
+
+    <!-- Main test -->
+    <div class="card card-blue">
+      <span class="card-icon">🏥</span>
+      <div class="tag tag-blue">Основной тест</div>
+      <div class="card-title">Клинический разбор — 23 шага</div>
+      <div class="card-body">
+        Студент становится врачом и ведёт пациента от первого приёма до выписки. Тест чередует информацию и вопросы:
+      </div>
+      <div class="steps-strip">
+        <div class="step-chip chip-info">📄 Жалобы пациента</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">🧪 Анализы</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">📡 Диагностика</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">🔍 Диагноз</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">💊 Лечение</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-info">📊 Наблюдение</div>
+        <div class="step-chip chip-q">❓ Вопрос</div>
+        <div class="step-chip chip-итог">✅ Итог</div>
+      </div>
+      <div class="note note-blue" style="margin-top:12px">Порог прохождения — 70%. Каждый информационный шаг сопровождается картинкой из учебника, если она есть.</div>
+    </div>
+
+    <!-- Additional test -->
+    <div class="card card-teal">
+      <span class="card-icon">📝</span>
+      <div class="tag tag-teal">Дополнительный тест</div>
+      <div class="card-title">Теоретические вопросы — если провалил основной</div>
+      <div class="card-body">
+        Если студент не прошёл клинический разбор, открывается дополнительный тест. Он проверяет теорию того же раздела — без истории болезни, просто вопросы по знаниям:
+      </div>
+      <div class="steps-strip">
+        <div class="step-chip chip-info">📌 Вводный слайд</div>
+        <div class="step-chip chip-q">❓ Вопрос 1</div>
+        <div class="step-chip chip-q">❓ Вопрос 2</div>
+        <div class="step-chip chip-q">❓ ···</div>
+        <div class="step-chip chip-q">❓ Вопрос N</div>
+        <div class="step-chip chip-итог">✅ Итог</div>
+      </div>
+      <div class="note note-green" style="margin-top:12px">Тест создаётся из того же раздела учебника, что и основной. Не повторяет клинический сценарий — только знания. Тоже порог 70%.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Добавляем иллюстрации</div>
+
+  <!-- PHASE 3: Images -->
+  <div class="phase-label">③ Картинки из учебника</div>
+  <div class="grid-4">
+    <div class="card card-amber">
+      <span class="card-icon">🖼️</span>
+      <div class="tag tag-amber">Шаг 1</div>
+      <div class="card-title">Извлекаем из PDF</div>
+      <div class="card-body">PDF-парсер вытаскивает все изображения. Из ~26 файлов отбираем 19 полезных — убираем технические артефакты и дубли.</div>
+    </div>
+    <div class="card card-amber">
+      <span class="card-icon">⚡</span>
+      <div class="tag tag-amber">Шаг 2</div>
+      <div class="card-title">Сжимаем для быстрой загрузки</div>
+      <div class="card-body">Каждая картинка уменьшается и сжимается автоматически. Итог: суммарный вес снизился почти вдвое (−48%) — страницы грузятся быстрее.</div>
+    </div>
+    <div class="card card-amber">
+      <span class="card-icon">☁️</span>
+      <div class="tag tag-amber">Шаг 3</div>
+      <div class="card-title">Загружаем на платформу</div>
+      <div class="card-body">Каждая картинка загружается на сервер под своим именем. Адрес картинки не меняется при обновлении — удобно для правок.</div>
+    </div>
+    <div class="card card-amber">
+      <span class="card-icon">📐</span>
+      <div class="tag tag-amber">Шаг 4</div>
+      <div class="card-title">Расставляем по местам</div>
+      <div class="card-body">Каждая картинка идёт в тот текстовый материал, где она объясняется. Не перед текстом, а после — сначала читаем, потом смотрим схему.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Настраиваем организацию и пользователей</div>
+
+  <!-- PHASE 4: Org + Users -->
+  <div class="phase-label">④ Создаём организацию и студентов</div>
+  <div class="grid-4">
+    <div class="card card-rose">
+      <span class="card-icon">🏢</span>
+      <div class="tag tag-rose">Компания</div>
+      <div class="card-title">Регистрируем организацию</div>
+      <div class="card-body">На платформе создаётся организация (например, «Эвоген»). Это верхний уровень — под неё потом создаются отдел и группа.</div>
+    </div>
+    <div class="card card-rose">
+      <span class="card-icon">🏗️</span>
+      <div class="tag tag-rose">Отдел</div>
+      <div class="card-title">Добавляем подразделение</div>
+      <div class="card-body">Внутри организации создаётся учебный отдел (например, «Учебный центр»). Он нужен для структуры, не для доступа к курсу.</div>
+    </div>
+    <div class="card card-rose">
+      <span class="card-icon">👥</span>
+      <div class="tag tag-rose">Группа</div>
+      <div class="card-title">Создаём учебную группу</div>
+      <div class="card-body">Группа — это список студентов, которые проходят данный курс. Курс будет привязан именно к группе.</div>
+    </div>
+    <div class="card card-rose">
+      <span class="card-icon">🔑</span>
+      <div class="tag tag-rose">Студенты</div>
+      <div class="card-title">Генерируем логины и пароли</div>
+      <div class="card-body">Платформа создаёт нужное количество учётных записей (например, 30 штук) с автоматически сгенерированными паролями. Все данные сохраняются в файл.</div>
+    </div>
+  </div>
+
+  <div class="section-arrow">Собираем курс и запускаем</div>
+
+  <!-- PHASE 5: Course -->
+  <div class="phase-label">⑤ Собираем и запускаем курс</div>
+  <div class="grid-3">
+    <div class="card card-green">
+      <span class="card-icon">🧩</span>
+      <div class="tag tag-green">Сборка</div>
+      <div class="card-title">Выстраиваем цепочку шагов</div>
+      <div class="card-body">
+        Все материалы, видео и тесты собираются в линейную адаптивную цепочку. Порядок задаётся в спецификации курса:
+        <div class="flow-strip" style="margin-top:10px">
+          <div class="flow-box fb-mat">📄 Материал</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-vid">🎥 Видео</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-test">📝 Тест</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-mat">📄 Материал</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box fb-test">📝 Тест</div>
+          <div class="flow-arrow">→</div>
+          <span style="color:#94a3b8;font-size:13px">···</span>
+        </div>
+      </div>
+    </div>
+    <div class="card card-green">
+      <span class="card-icon">🚀</span>
+      <div class="tag tag-green">Публикация</div>
+      <div class="card-title">Курс появляется на платформе</div>
+      <div class="card-body">Собранный курс загружается на платформу. Затем он привязывается к группе — и все студенты группы сразу видят его в своём личном кабинете.</div>
+      <div class="note note-green" style="margin-top:10px">Если что-то меняется (добавили тест, исправили текст) — курс обновляется без пересоздания. Студенты, уже проходящие его, не теряют прогресс.</div>
+    </div>
+    <div class="card card-green">
+      <span class="card-icon">🔄</span>
+      <div class="tag tag-green">Адаптивность</div>
+      <div class="card-title">Логика прохождения</div>
+      <div class="card-body">
+        <div class="flow-strip" style="flex-direction:column;align-items:flex-start;gap:5px">
+          <div style="display:flex;align-items:center;gap:7px"><div class="flow-box fb-test" style="padding:5px 10px;font-size:11px">📝 Тест</div><div class="flow-arrow">→</div><div class="flow-box fb-pass" style="padding:5px 10px;font-size:11px">≥ 70% ✓</div><div class="flow-arrow">→</div><div class="flow-box fb-next" style="padding:5px 10px;font-size:11px">Следующий шаг</div></div>
+          <div style="display:flex;align-items:center;gap:7px"><div class="flow-box fb-test" style="padding:5px 10px;font-size:11px">📝 Тест</div><div class="flow-arrow">→</div><div class="flow-box fb-fail" style="padding:5px 10px;font-size:11px">&lt; 70% ✗</div><div class="flow-arrow">→</div><div class="flow-box fb-extra" style="padding:5px 10px;font-size:11px">📝 Доп. тест</div></div>
+          <div style="padding-left:148px;display:flex;align-items:center;gap:7px">
+            <div class="flow-box fb-pass" style="padding:5px 10px;font-size:11px">≥ 70% ✓</div><div class="flow-arrow">→</div><div class="flow-box fb-next" style="padding:5px 10px;font-size:11px">Следующий шаг</div>
+          </div>
+          <div style="padding-left:148px;display:flex;align-items:center;gap:7px">
+            <div class="flow-box fb-fail" style="padding:5px 10px;font-size:11px">&lt; 70% ✗</div><div class="flow-arrow">→</div><div class="flow-box fb-extra" style="padding:5px 10px;font-size:11px">Снова доп. тест</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card">
+    <strong>Что видит студент в итоге:</strong> он заходит в личный кабинет под своим логином, видит курс и проходит его шаг за шагом — сначала читает материал, смотрит видео, затем проходит тест по реальному клиническому случаю. Если не сдал — открывается дополнительный тест на теорию. Как только сдал его — идёт дальше. Застрять невозможно: дополнительный тест всегда открыт, пока не сдан.
+  </div>
+
+</div><!-- /desktop -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     MOBILE LAYOUT — accordion
+════════════════════════════════════════════════════ -->
+<div class="mobile-only">
+
+<div class="phase-label">① Откуда берётся контент</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">📖</span> Учебно-методическое пособие
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Учебник по теме курса в PDF. Из него берётся всё — тексты, картинки, клинические случаи.<br><br>
+    <strong>Три типа материала:</strong>
+    <ul>
+      <li><strong>Теоретические разделы</strong> — объяснения и иллюстрации</li>
+      <li><strong>Клинические случаи</strong> — истории болезни с вопросами</li>
+      <li><strong>Видеолекции</strong> — записи на Kinescope</li>
+    </ul>
+    <div class="note note-blue">Каждый клинический случай оформляется в отдельный файл-сценарий, каждый теоретический раздел — в текстовый материал.</div>
+  </div>
+</div>
+
+<div class="phase-label">② Два вида тестов</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🏥</span> Основной тест — клинический разбор
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Студент становится врачом и ведёт пациента от первого приёма до выписки. Тест из 23 шагов, которые чередуют информацию и вопросы:<br><br>
+    <div class="steps-strip">
+      <div class="step-chip chip-info">📄 Жалобы пациента</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">🧪 Анализы</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">📡 Диагностика</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">🔍 Диагноз</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-info">💊 Лечение</div>
+      <div class="step-chip chip-q">❓ Вопрос</div>
+      <div class="step-chip chip-итог">✅ Итог</div>
+    </div>
+    <div class="note note-blue">Порог прохождения — 70%. К каждому информационному шагу прикрепляется картинка из учебника, если она есть по теме.</div>
+  </div>
+</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">📝</span> Дополнительный тест — теория
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Если студент не прошёл клинический разбор, открывается дополнительный тест. Он проверяет теорию того же раздела — без истории болезни, просто вопросы:<br><br>
+    <div class="steps-strip">
+      <div class="step-chip chip-info">📌 Вводный слайд</div>
+      <div class="step-chip chip-q">❓ Вопрос 1</div>
+      <div class="step-chip chip-q">❓ ···</div>
+      <div class="step-chip chip-q">❓ Вопрос N</div>
+      <div class="step-chip chip-итог">✅ Итог</div>
+    </div>
+    <div class="note note-green">Тест берётся из того же раздела учебника, что и основной. Не повторяет сценарий — только чистые знания. Тоже порог 70%.</div>
+  </div>
+</div>
+
+<div class="phase-label">③ Картинки из учебника</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🖼️</span> Как обрабатываются иллюстрации
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    <ul>
+      <li><strong>Извлекаем из PDF</strong> — парсер вытаскивает ~26 файлов, из них отбираем 19 полезных (убираем технические артефакты и дубли)</li>
+      <li><strong>Сжимаем</strong> — каждая картинка автоматически уменьшается. Суммарный вес снизился вдвое (−48%) — страницы грузятся быстрее</li>
+      <li><strong>Загружаем на сервер</strong> — у каждой картинки постоянный адрес, удобно для правок</li>
+      <li><strong>Расставляем по местам</strong> — картинка идёт после объясняющего текста, не перед ним</li>
+    </ul>
+  </div>
+</div>
+
+<div class="phase-label">④ Организация и студенты</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🏢</span> Создаём организацию
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    На платформе создаётся трёхуровневая структура:<br><br>
+    <ul>
+      <li><strong>Компания</strong> — верхний уровень (например, «Эвоген»)</li>
+      <li><strong>Подразделение</strong> — учебный отдел внутри компании</li>
+      <li><strong>Группа</strong> — список студентов, которые проходят курс. Именно к группе привязывается курс</li>
+    </ul>
+    <div class="note note-amber">Если организация уже создана — повторный запуск её не дублирует, а использует существующую.</div>
+  </div>
+</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🔑</span> Создаём учётные записи студентов
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Платформа создаёт нужное количество учётных записей (например, 30 штук) с автоматическими паролями. Все логины и пароли сохраняются в файл — их можно раздать студентам.<br><br>
+    Если запустить повторно — пароли не теряются, а сбрасываются и снова записываются в файл.
+  </div>
+</div>
+
+<div class="phase-label">⑤ Сборка и запуск курса</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🧩</span> Выстраиваем цепочку шагов
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Все материалы, видео и тесты собираются в линейную цепочку. Каждый студент проходит её последовательно — следующий шаг открывается только после завершения предыдущего:<br><br>
+    <div class="steps-strip">
+      <div class="step-chip chip-info">📄 Материал</div>
+      <div class="step-chip chip-info">🎥 Видео</div>
+      <div class="step-chip chip-q">📝 Тест</div>
+      <div class="step-chip chip-info">📄 Материал</div>
+      <div class="step-chip chip-q">📝 Тест</div>
+      <div class="step-chip" style="background:#f8fafc;border-color:#e2e8f0;color:#64748b">···</div>
+    </div>
+  </div>
+</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🚀</span> Курс появляется у студентов
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    Курс загружается на платформу и привязывается к группе — все студенты группы сразу видят его в личном кабинете.<br><br>
+    Если что-то меняется (добавили тест, исправили текст) — курс обновляется без пересоздания. Студенты, уже проходящие его, не теряют прогресс.
+  </div>
+</div>
+
+<div class="accordion-wrap">
+  <button class="accordion-btn" onclick="tog(this)">
+    <span class="icon">🔄</span> Логика прохождения
+    <span class="chevron">▼</span>
+  </button>
+  <div class="accordion-body">
+    <ul>
+      <li>Студент сдал основной тест (≥ 70%) → переходит дальше</li>
+      <li>Провалил основной тест (&lt; 70%) → открывается дополнительный тест на теорию</li>
+      <li>Сдал дополнительный (≥ 70%) → переходит дальше</li>
+      <li>Провалил дополнительный → снова дополнительный тест</li>
+    </ul>
+    <div class="note note-green">Студент не может «застрять» навсегда — дополнительный тест всегда открыт и доступен столько раз, сколько нужно.</div>
+  </div>
+</div>
+
+<div class="result-card" style="margin:4px 16px 24px">
+  <strong>Что видит студент в итоге:</strong> он заходит под своим логином, видит курс и проходит его шаг за шагом — читает материал, смотрит видео, проходит клинический тест. Если не сдал — открывается теоретический тест. Как только сдал — идёт дальше.
+</div>
+
+</div><!-- /mobile -->
+
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Контент из учебника</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Основные тесты</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div>Дополнительные тесты</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Изображения</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f43f5e"></div>Организация</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Сборка курса</div>
+  <div class="legend-item" style="margin-left:auto"><span style="font-size:10px;color:#94a3b8">med-game.ru · Adaptive Course</span></div>
+</div>
+
+<script>
+function tog(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Курс на платформе — 2026 Генетика ДПО</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f8fafc; --card: #fff; --fg: #0f172a;
+  --mute: #64748b; --border: #e2e8f0;
+  --primary: #0e7490; --success: #059669;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+body { font-family: var(--font); background: var(--bg); color: var(--fg); }
+
+.topbar {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+}
+.back-link {
+  font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 600;
+  display: flex; align-items: center; gap: 4px;
+}
+.topbar-title { font-size: 14px; font-weight: 700; color: var(--mute); }
+
+.hero {
+  background: linear-gradient(135deg, #0e7490 0%, #0369a1 100%);
+  color: #fff; padding: 36px 24px 32px; text-align: center;
+}
+.hero-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; opacity: .75; margin-bottom: 10px;
+}
+.hero-title { font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 8px; }
+.hero-sub { font-size: 14px; opacity: .8; line-height: 1.5; margin-bottom: 20px; }
+.hero-stats {
+  display: inline-flex; gap: 24px; flex-wrap: wrap;
+  justify-content: center;
+}
+.stat { text-align: center; }
+.stat-num { font-size: 28px; font-weight: 800; display: block; }
+.stat-label { font-size: 11px; opacity: .75; text-transform: uppercase; letter-spacing: .07em; }
+
+.main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+
+/* Progress bar */
+.progress-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 16px; margin-bottom: 20px;
+}
+.progress-bar-wrap {
+  flex: 1; height: 6px; background: var(--border);
+  border-radius: 99px; overflow: hidden;
+}
+.progress-bar-fill { height: 100%; border-radius: 99px; }
+.progress-label { font-size: 11px; font-weight: 700; color: var(--mute); white-space: nowrap; }
+
+/* Module section */
+.module { margin-bottom: 32px; }
+.module-header {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--mute);
+  padding: 8px 0 10px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 10px;
+}
+
+/* Step row */
+.step {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 12px 14px; background: var(--card);
+  border: 1.5px solid var(--border); border-radius: 12px;
+  margin-bottom: 8px; position: relative;
+}
+.step-dot {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; margin-top: 2px;
+}
+.step-dot-text   { background: #ede9fe; color: #6d28d9; }
+.step-dot-video  { background: #fce7f3; color: #9d174d; }
+.step-dot-test   { background: #fff7ed; color: #c2410c; }
+.step-dot-itog   { background: #dcfce7; color: #15803d; }
+
+.step-body { flex: 1; }
+.step-num {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--mute); margin-bottom: 3px;
+}
+.step-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; line-height: 1.35; }
+.step-desc { font-size: 12px; color: var(--mute); line-height: 1.5; }
+
+.step-right {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 4px; flex-shrink: 0;
+}
+.badge {
+  font-size: 10px; font-weight: 700; border-radius: 6px;
+  padding: 3px 8px; white-space: nowrap;
+}
+.badge-text  { background: #ede9fe; color: #6d28d9; }
+.badge-video { background: #fce7f3; color: #9d174d; }
+.badge-test  { background: #fff7ed; color: #c2410c; }
+.badge-extra { background: #ccfbf1; color: #0f766e; }
+.badge-itog  { background: #dcfce7; color: #15803d; }
+.badge-thr   {
+  background: #f0f9ff; color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+/* connector line */
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 30px; bottom: -8px;
+  width: 2px; height: 8px;
+  background: var(--border);
+}
+
+/* adaptive note */
+.adaptive-note {
+  background: #f0fdf4; border: 1.5px solid #86efac;
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 12px; color: #14532d; line-height: 1.6;
+  margin-bottom: 8px; margin-left: 48px;
+}
+.adaptive-note strong { font-weight: 700; }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--border); margin-top: 32px;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--mute); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-link" href="index.html">← Назад</a>
+  <span class="topbar-title">Документ 1 · Курс на платформе</span>
+</div>
+
+<div class="hero">
+  <div class="hero-label">2026 · Генетика ДПО · Эвоген</div>
+  <h1 class="hero-title">Курс на платформе</h1>
+  <p class="hero-sub">Что видит студент — все шаги в порядке прохождения</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">24</span><span class="stat-label">Шага всего</span></div>
+    <div class="stat"><span class="stat-num">10</span><span class="stat-label">Клин. тестов</span></div>
+    <div class="stat"><span class="stat-num">4</span><span class="stat-label">Видеолекции</span></div>
+    <div class="stat"><span class="stat-num">70%</span><span class="stat-label">Порог сдачи</span></div>
+  </div>
+</div>
+
+<main class="main">
+
+  <div class="progress-row">
+    <span class="progress-label">Прогресс студента</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:var(--primary)"></div>
+    </div>
+    <span class="progress-label">0 / 24</span>
+  </div>
+
+  <!-- MODULE 1 -->
+  <div class="module">
+    <div class="module-header">Модуль 1 — Молекулярные основы наследственности</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 1 · Материал</div>
+        <div class="step-title">Молекулярные и цитологические основы наследственности</div>
+        <div class="step-desc">Строение ДНК, хромосом, кариотип, аллели, гомозиготность и гетерозиготность</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-video">🎥</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 2 · Видеолекция</div>
+        <div class="step-title">Лекция 1 — Введение в молекулярную генетику</div>
+        <div class="step-desc">Основы структуры ДНК, хромосом и кариотипа</div>
+      </div>
+      <div class="step-right"><span class="badge badge-video">Видео</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 3 · Материал</div>
+        <div class="step-title">Гены, признаки и изменчивость</div>
+        <div class="step-desc">Понятие гена и аллелей, типы взаимодействия аллелей, доминирование и рецессивность</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 4 · Основной тест</div>
+        <div class="step-title">Клинический случай — НФ1: аутосомно-доминантный риск</div>
+        <div class="step-desc">23-шаговый клинический разбор: пациент с нейрофиброматозом типа 1, расчёт АД-риска</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если результат &lt; 70%</strong> — открывается дополнительный тест<br>
+      <strong>«Основы наследственности: геном и АД-риск»</strong> — теоретические вопросы по теме НФ1
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module">
+    <div class="module-header">Модуль 2 — Классификация и хромосомные болезни</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 5 · Материал</div>
+        <div class="step-title">Классификация наследственных болезней</div>
+        <div class="step-desc">Хромосомные, моногенные, мультифакториальные болезни — группы, принципы разделения</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 6 · Материал</div>
+        <div class="step-title">Хромосомные болезни: анеуплоидии и структурные аберрации</div>
+        <div class="step-desc">Трисомии, моносомии, делеции, транслокации, инверсии</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 7 · Основной тест</div>
+        <div class="step-title">Клинический случай — Трисомия 21: синдром Дауна</div>
+        <div class="step-desc">23-шаговый разбор: пренатальный скрининг, кариотипирование, консультирование семьи</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест<br>
+      <strong>«Хромосомные болезни: кариотип и показания»</strong>
+    </div>
+  </div>
+
+  <!-- MODULE 3 -->
+  <div class="module">
+    <div class="module-header">Модуль 3 — Моногенные болезни</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 8 · Материал</div>
+        <div class="step-title">Моногенные формы наследственных болезней</div>
+        <div class="step-desc">Аутосомно-доминантное, аутосомно-рецессивное, X-сцепленное наследование</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 9 · Основной тест</div>
+        <div class="step-title">Клинический случай — ВПС плода: мультифакториальный риск</div>
+        <div class="step-desc">23-шаговый разбор: пренатальный диагноз ВПС, расчёт риска рецидива, тактика</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест<br>
+      <strong>«Мультифакториальные болезни и ВПС плода»</strong>
+    </div>
+  </div>
+
+  <!-- MODULE 4 -->
+  <div class="module">
+    <div class="module-header">Модуль 4 — Мультифакториальные болезни и НПД</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 10 · Материал</div>
+        <div class="step-title">Болезни с наследственным предрасположением</div>
+        <div class="step-desc">Мультифакториальные болезни, пороговая модель, риск рецидива</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 11 · Основной тест</div>
+        <div class="step-title">Клинический случай — НПД: дисгенезия гонад (Тернер)</div>
+        <div class="step-desc">23-шаговый разбор: первичная аменорея, кариотип 45X0, ЗГТ</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест по теме НПД · Случай 1
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 12 · Основной тест</div>
+        <div class="step-title">Клинический случай — НПД: синдром тестикулярной феминизации (CAIS)</div>
+        <div class="step-desc">23-шаговый разбор: кариотип 46XY, мутация AR, гонадэктомия, ЗГТ эстрогенами</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест<br>
+      <strong>«Синдром тестикулярной феминизации: генетика, диагностика, тактика»</strong>
+    </div>
+  </div>
+
+  <!-- MODULE 5 -->
+  <div class="module">
+    <div class="module-header">Модуль 5 — Диагностика: кариотипирование и молекулярные методы</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 13 · Материал</div>
+        <div class="step-title">Кариотипирование: метод и показания</div>
+        <div class="step-desc">Классический цитогенетический анализ, показания, интерпретация результатов</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-video">🎥</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 14 · Видеолекция</div>
+        <div class="step-title">Лекция 2 — Молекулярно-генетические методы диагностики, часть 1</div>
+        <div class="step-desc">ПЦР, MLPA, секвенирование — принципы и клиническое применение</div>
+      </div>
+      <div class="step-right"><span class="badge badge-video">Видео</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 15 · Материал</div>
+        <div class="step-title">Молекулярно-генетические методы диагностики</div>
+        <div class="step-desc">ПЦР, секвенирование, FISH, хромосомный микроматричный анализ (ХМА)</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-video">🎥</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 16 · Видеолекция</div>
+        <div class="step-title">Лекция 3 — Молекулярно-генетические методы диагностики, часть 2</div>
+        <div class="step-desc">ХМА, NGS-панели, экзомное секвенирование</div>
+      </div>
+      <div class="step-right"><span class="badge badge-video">Видео</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 17 · Основной тест</div>
+        <div class="step-title">Клинический случай — Пренатальная диагностика</div>
+        <div class="step-desc">23-шаговый разбор: показания к инвазивной ПД, интерпретация результатов, тактика</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест по молекулярной диагностике
+    </div>
+  </div>
+
+  <!-- MODULE 6 -->
+  <div class="module">
+    <div class="module-header">Модуль 6 — МГК, скрининг носительства и пренатальная диагностика</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 18 · Материал</div>
+        <div class="step-title">Скрининг носительства и медико-генетическое консультирование</div>
+        <div class="step-desc">Показания к МГК, расчёт риска, скрининг на носительство рецессивных мутаций</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-video">🎥</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 19 · Видеолекция</div>
+        <div class="step-title">Лекция 4 — Профилактика наследственной патологии</div>
+        <div class="step-desc">МГК, пренатальная диагностика, периконцепционная профилактика</div>
+      </div>
+      <div class="step-right"><span class="badge badge-video">Видео</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-text">📄</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 20 · Материал</div>
+        <div class="step-title">Пренатальная диагностика, ПГТ и ВРТ</div>
+        <div class="step-desc">Инвазивная и неинвазивная ПД, преимплантационное генетическое тестирование</div>
+      </div>
+      <div class="step-right"><span class="badge badge-text">Материал</span></div>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 21 · Основной тест</div>
+        <div class="step-title">Клинический случай — МГК при наследственном заболевании</div>
+        <div class="step-desc">23-шаговый разбор: консультирование семьи, расчёт риска, рекомендации</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест<br>
+      <strong>«МГК и профилактика наследственной патологии»</strong>
+    </div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 22 · Основной тест</div>
+        <div class="step-title">Клинический случай — Пренатальная диагностика и периконцепционная профилактика</div>
+        <div class="step-desc">23-шаговый разбор: скрининг I триместра, НИПТ, показания к ПГТ</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест<br>
+      <strong>«Пренатальная диагностика и периконцепционная профилактика»</strong>
+    </div>
+  </div>
+
+  <!-- MODULE 7 — FINAL -->
+  <div class="module">
+    <div class="module-header">Модуль 7 — Итоговая аттестация</div>
+
+    <div class="step">
+      <div class="step-dot step-dot-test">🧪</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 23 · Основной тест</div>
+        <div class="step-title">Клинический случай — BRCA: наследственный рак молочной железы</div>
+        <div class="step-desc">23-шаговый разбор: мутация BRCA1, МГК, профилактическая тактика</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-test">Тест</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+    <div class="adaptive-note">
+      🔁 <strong>Если &lt; 70%</strong> — дополнительный тест по скринингу носительства
+    </div>
+
+    <div class="step" style="border-color:#86efac;background:#f0fdf4">
+      <div class="step-dot step-dot-itog">🏆</div>
+      <div class="step-body">
+        <div class="step-num">Шаг 24 · Итоговая аттестация</div>
+        <div class="step-title">Итоговый тест — Медицинская генетика ДПО 2026</div>
+        <div class="step-desc">Финальный экзаменационный тест по всем темам курса. Открывается только после прохождения всех предыдущих шагов</div>
+      </div>
+      <div class="step-right">
+        <span class="badge badge-itog">Итоговый</span>
+        <span class="badge badge-thr">Порог 70%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#6d28d9"></div>Текстовый материал</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9d174d"></div>Видеолекция</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c2410c"></div>Клинический тест</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#15803d"></div>Итоговая аттестация</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0d9488"></div>Доп. тест (при провале)</div>
+  </div>
+
+</main>
+</body>
+</html>
