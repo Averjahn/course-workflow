@@ -3,570 +3,342 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Банк контента — 2026 Генетика ДПО</title>
+<title>Банк контента — адаптивный курс</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #f8fafc; --card: #fff; --fg: #0f172a;
-  --mute: #64748b; --border: #e2e8f0;
-  --primary: #0e7490;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+:root{
+  --bg:#f6f8fb; --card:#fff; --fg:#0f172a; --mute:#64748b; --border:#e2e8f0;
+  --primary:#0e7490; --primary-light:#ecfeff; --primary-2:#06b6d4;
+  --amber:#f59e0b; --violet:#6366f1; --green:#059669;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 }
-body { font-family: var(--font); background: var(--bg); color: var(--fg); }
+body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.6;
+  font-size:clamp(14px,.3vw+12px,16px);-webkit-font-smoothing:antialiased;}
 
-.topbar {
-  background: var(--card); border-bottom: 1px solid var(--border);
-  padding: 14px 20px; display: flex; align-items: center; gap: 12px;
-}
-.back-link { font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 600; }
-.topbar-title { font-size: 14px; font-weight: 700; color: var(--mute); }
+/* tabs */
+.tabs{position:sticky;top:0;z-index:50;background:#0c2d3e;}
+.tabs-inner{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,40px);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;min-height:58px;}
+.tabs-brand{color:#fff;font-weight:800;font-size:14px;letter-spacing:-.01em;
+  display:inline-flex;align-items:center;gap:8px;}
+.tabs-brand-icon{font-size:18px;}
+.tabs-links{display:flex;gap:6px;}
+.tab{color:rgba(255,255,255,.6);text-decoration:none;font-weight:600;font-size:14px;
+  padding:9px 16px;border-radius:10px;transition:.15s;white-space:nowrap;}
+.tab:hover{color:#fff;background:rgba(255,255,255,.08);}
+.tab-active{color:#fff;background:rgba(6,182,212,.22);}
 
-.hero {
-  background: linear-gradient(135deg, #0e7490 0%, #0369a1 100%);
-  color: #fff; padding: 36px 24px 32px; text-align: center;
-}
-.hero-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; opacity: .75; margin-bottom: 10px; }
-.hero-title { font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 8px; }
-.hero-sub { font-size: 14px; opacity: .8; line-height: 1.5; margin-bottom: 20px; }
-.hero-stats { display: inline-flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
-.stat { text-align: center; }
-.stat-num { font-size: 28px; font-weight: 800; display: block; }
-.stat-label { font-size: 11px; opacity: .75; text-transform: uppercase; letter-spacing: .07em; }
+/* header */
+.hero{background:var(--card);border-bottom:1px solid var(--border);
+  padding:clamp(26px,4vw,44px) clamp(16px,4vw,40px);}
+.hero-inner{max-width:1080px;margin:0 auto;}
+.hero-kicker{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--primary);margin-bottom:10px;}
+.hero h1{font-size:clamp(24px,3.4vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:12px;}
+.hero p{color:var(--mute);max-width:680px;font-size:clamp(15px,1vw,17px);}
 
-.main { max-width: 800px; margin: 0 auto; padding: 32px 20px 64px; }
+/* layout */
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(16px,4vw,40px) 80px;}
+.section{margin-bottom:clamp(36px,5vw,60px);}
+.slabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--mute);margin-bottom:6px;}
+.stitle{font-size:clamp(19px,2.2vw,26px);font-weight:800;letter-spacing:-.02em;margin-bottom:14px;}
+.lead{color:var(--mute);max-width:760px;margin-bottom:22px;}
 
-.section-title {
-  font-size: 13px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .09em; color: var(--fg);
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 12px; margin-top: 32px;
-}
-.section-title:first-child { margin-top: 0; }
-.section-chip {
-  font-size: 10px; font-weight: 700; border-radius: 6px;
-  padding: 2px 7px; text-transform: none; letter-spacing: 0;
-}
+/* callout */
+.callout{background:var(--primary-light);border:1px solid #cffafe;border-left:4px solid var(--primary);
+  border-radius:12px;padding:18px 20px;margin-bottom:22px;}
+.callout b{color:var(--primary);}
+.callout .big{font-size:17px;font-weight:700;display:block;margin-bottom:6px;color:var(--fg);}
 
-/* Content card */
-.content-card {
-  background: var(--card); border: 1.5px solid var(--border);
-  border-radius: 12px; padding: 16px;
-  margin-bottom: 10px;
-  display: flex; align-items: flex-start; gap: 14px;
-}
-.content-card:hover { border-color: var(--primary); }
+/* source cards */
+.srcgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+@media(max-width:680px){.srcgrid{grid-template-columns:1fr;}}
+.src{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:22px;}
+.src-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.src-ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;}
+.src-ico.u{background:#eef2ff;color:var(--violet);}
+.src-ico.d{background:#ecfeff;color:var(--primary);}
+.src-count{font-size:13px;font-weight:700;color:var(--mute);}
+.src h3{font-size:16px;font-weight:800;line-height:1.25;margin-bottom:8px;}
+.src p{font-size:13.5px;color:var(--mute);}
+.src .pill{display:inline-block;margin-top:12px;font-size:12px;font-weight:600;color:var(--primary);
+  background:var(--primary-light);border-radius:8px;padding:4px 10px;}
 
-.cc-icon {
-  width: 38px; height: 38px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
+/* steps */
+.steps{display:flex;flex-direction:column;gap:12px;}
+.step{display:flex;gap:16px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;padding:18px 20px;}
+.step-n{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:var(--primary);color:#fff;
+  font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.step h4{font-size:15.5px;font-weight:700;margin-bottom:4px;}
+.step p{font-size:13.5px;color:var(--mute);}
 
-.cc-body { flex: 1; }
-.cc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--mute); margin-bottom: 3px; }
-.cc-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.35; }
-.cc-desc { font-size: 12px; color: var(--mute); line-height: 1.55; }
+/* tables */
+.tablewrap{background:var(--card);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;}
+.tablescroll{overflow-x:auto;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:560px;}
+thead th{background:#f1f5f9;text-align:left;font-weight:700;color:#334155;font-size:12px;
+  text-transform:uppercase;letter-spacing:.04em;padding:12px 14px;border-bottom:1px solid var(--border);}
+tbody td{padding:12px 14px;border-bottom:1px solid #eef2f6;vertical-align:top;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#f8fafc;}
+.mblock{font-weight:700;width:32%;}
+.mchunks{white-space:nowrap;color:var(--primary);font-weight:600;font-size:12.5px;}
+.mwhy{color:var(--mute);}
+.cnum{color:#94a3b8;width:40px;font-variant-numeric:tabular-nums;}
+.cid{font-weight:700;color:var(--primary);white-space:nowrap;width:64px;font-size:12.5px;}
+.csec{font-weight:600;width:26%;}
+.csum{color:var(--mute);}
+.tcap{font-size:12.5px;color:var(--mute);padding:12px 14px;background:#fbfdff;border-top:1px solid var(--border);}
 
-.cc-right {
-  display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;
-}
-.badge {
-  font-size: 10px; font-weight: 700; border-radius: 6px;
-  padding: 3px 8px; white-space: nowrap;
-}
-.badge-clinical { background: #fff7ed; color: #c2410c; }
-.badge-extra    { background: #ccfbf1; color: #0f766e; }
-.badge-itog     { background: #dcfce7; color: #15803d; }
-.badge-text     { background: #ede9fe; color: #6d28d9; }
-.badge-video    { background: #fce7f3; color: #9d174d; }
+/* terms */
+.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+@media(max-width:680px){.terms{grid-template-columns:1fr;}}
+.term{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;}
+.term b{color:var(--fg);} .term span{color:var(--mute);}
+.term .arrow{color:var(--primary);font-weight:700;}
 
-/* color scheme per section */
-.icon-clinical { background: #fff7ed; }
-.icon-extra    { background: #ccfbf1; }
-.icon-itog     { background: #dcfce7; }
-.icon-text     { background: #ede9fe; }
-.icon-video    { background: #fce7f3; }
-
-/* key pill */
-.key-pill {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 600; background: #f1f5f9;
-  color: var(--mute); border-radius: 5px; padding: 2px 7px;
-  margin-top: 6px; margin-right: 4px; white-space: nowrap;
-}
-
-.divider {
-  height: 1px; background: var(--border); margin: 28px 0 0;
-}
-
-/* Intro box */
-.intro-box {
-  background: #f0f9ff; border: 1.5px solid #bae6fd;
-  border-radius: 12px; padding: 16px 18px;
-  margin-bottom: 28px; font-size: 13px; line-height: 1.6; color: #0c4a6e;
-}
-.intro-box strong { font-weight: 700; }
-
-@media (max-width: 560px) {
-  .cc-right { display: none; }
-  .content-card { gap: 10px; }
-}
+.note{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px 18px;color:#92400e;font-size:14px;}
+.footer{text-align:center;padding:24px;font-size:12px;color:#94a3b8;border-top:1px solid var(--border);background:var(--card);}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <a class="back-link" href="index.html">← Назад</a>
-  <span class="topbar-title">Документ 2 · Банк контента</span>
-</div>
-
-<div class="hero">
-  <div class="hero-label">2026 · Генетика ДПО · Эвоген</div>
-  <h1 class="hero-title">Банк контента</h1>
-  <p class="hero-sub">Все единицы контента, из которых собран курс</p>
-  <div class="hero-stats">
-    <div class="stat"><span class="stat-num">10</span><span class="stat-label">Клин. случаев</span></div>
-    <div class="stat"><span class="stat-num">9</span><span class="stat-label">Доп. тестов</span></div>
-    <div class="stat"><span class="stat-num">7</span><span class="stat-label">Текст. блоков</span></div>
-    <div class="stat"><span class="stat-num">4</span><span class="stat-num">Видео</span></div>
-  </div>
-</div>
-
-<main class="main">
-
-  <div class="intro-box">
-    <strong>Как читать этот документ.</strong> Банк контента — это набор отдельных единиц: клинических случаев, теоретических материалов, видеолекций и вопросников. Каждая единица — самостоятельный «кирпич», из которых конструктор курса собирает адаптивный путь обучения. Клинические случаи — это 23-шаговые интерактивные разборы, где студент принимает клинические решения шаг за шагом.
-  </div>
-
-  <!-- SECTION 1: CLINICAL SCENARIOS -->
-  <div class="section-title">
-    🧪 Клинические сценарии
-    <span class="section-chip badge-clinical">10 случаев · основные тесты курса</span>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #1</div>
-      <div class="cc-title">НФ1: аутосомно-доминантный риск наследственного заболевания</div>
-      <div class="cc-desc">
-        Пациент с нейрофиброматозом типа 1 — аутосомно-доминантным заболеванием. Студент собирает жалобы, анамнез, анализирует клинические признаки, рассчитывает вероятность наследования для детей, формулирует рекомендации.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">АД-наследование</span>
-        <span class="key-pill">Расчёт риска</span>
-        <span class="key-pill">МГК</span>
-      </div>
+<nav class="tabs">
+  <div class="tabs-inner">
+    <span class="tabs-brand"><span class="tabs-brand-icon">🧬</span> Адаптивный курс · Эвоген</span>
+    <div class="tabs-links">
+      <a class="tab tab-active" href="content.html">📦 Банк контента</a>
+      <a class="tab" href="workflow.html">⚙️ Логика курса</a>
     </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
   </div>
+</nav>
 
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #2</div>
-      <div class="cc-title">Трисомия 21: синдром Дауна — пренатальный скрининг и консультирование семьи</div>
-      <div class="cc-desc">
-        Пренатальный диагноз синдрома Дауна у плода. Студент разбирает данные скрининга I триместра, результаты кариотипирования ворсин хориона, тактику ведения беременности, консультирование семьи.
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker">Документация курса · понятным языком</div>
+    <h1>Банк контента</h1>
+    <p>Это библиотека всех учебных материалов, из которых собран курс «Пренатальная диагностика в акушерстве и гинекологии». Здесь показано, из чего сделан каждый блок курса и откуда взялся каждый факт.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- WHAT IS A CHUNK -->
+  <section class="section">
+    <div class="slabel">С чего всё начинается</div>
+    <div class="stitle">Что такое «чанк» простыми словами</div>
+    <div class="callout">
+      <span class="big">Чанк — это маленький кусочек учебника.</span>
+      Мы взяли два больших документа и аккуратно разрезали их на <b>67 небольших фрагментов</b>. Каждый фрагмент — это один законченный по смыслу отрывок: один раздел, одно определение, один список примеров. Представьте, что толстую методичку разложили на 67 карточек — на каждой карточке одна тема. С такими карточками удобно работать: легко найти нужную и собрать из них новый материал.
+    </div>
+    <p class="lead">Зачем резать на кусочки? Чтобы под каждый блок курса можно было быстро найти ровно те карточки, которые нужны, и не перечитывать весь учебник заново. И чтобы каждый вопрос в тесте опирался на конкретный кусочек первоисточника, а не на чью-то память.</p>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="section">
+    <div class="slabel">Откуда взят весь контент</div>
+    <div class="stitle">Два документа-первоисточника</div>
+    <p class="lead">Весь банк контента собран всего из двух официальных документов Эвоген. Один — учебник, второй — программа обучения.</p>
+    <div class="srcgrid">
+      <div class="src">
+        <div class="src-top">
+          <div class="src-ico u">📘</div>
+          <div><div class="src-count">45 чанков</div></div>
+        </div>
+        <h3>УМП «Применение генетических исследований в практике врача»</h3>
+        <p>Учебно-методическое пособие — основной учебник курса. Из него взяты все темы, объяснения методов и клинические примеры. Это «мясо» курса: термины, болезни, методы диагностики.</p>
+        <span class="pill">Темы и методы → материалы и тесты</span>
       </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">Трисомия 21</span>
-        <span class="key-pill">Кариотипирование</span>
-        <span class="key-pill">Пренатальная диагностика</span>
+      <div class="src">
+        <div class="src-top">
+          <div class="src-ico d">📋</div>
+          <div><div class="src-count">22 чанка</div></div>
+        </div>
+        <h3>Программа ДПО «Пренатальная диагностика в акушерстве и гинекологии»</h3>
+        <p>Официальная программа повышения квалификации (36 часов). Это «рамка» курса: чему врач должен научиться, какие компетенции проверяем, форма итоговой аттестации, список литературы.</p>
+        <span class="pill">Структура и аттестация → каркас курса</span>
       </div>
     </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
+  </section>
 
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #3</div>
-      <div class="cc-title">ВПС плода: мультифакториальный риск рецидива</div>
-      <div class="cc-desc">
-        Пренатально диагностированный врождённый порок сердца. Студент анализирует мультифакториальную природу заболевания, рассчитывает риск рецидива для будущих беременностей, выбирает тактику ПД.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">ВПС плода</span>
-        <span class="key-pill">Мультифакториальная болезнь</span>
-        <span class="key-pill">Риск рецидива</span>
-      </div>
+  <!-- PROCESS -->
+  <section class="section">
+    <div class="slabel">Как мы работали с чанками</div>
+    <div class="stitle">5 шагов — от документа до готового блока</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><h4>Собрали два документа</h4><p>Взяли учебник (УМП) и программу обучения (ДПО) в исходном виде.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div><h4>Разрезали на 67 чанков</h4><p>Поделили документы по разделам и подразделам так, чтобы каждый чанк был законченным по смыслу. Для каждого сделали короткое описание — «что внутри».</p></div></div>
+      <div class="step"><div class="step-n">3</div><div><h4>Под каждый блок нашли нужные чанки</h4><p>Для темы блока (например, «Кариотипирование») подбирали именно те чанки, где про это написано. Поиск шёл по смыслу, а не по точному слову — поэтому находились даже фрагменты, где тема названа иначе.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div><h4>Из чанков собрали материал и вопросы</h4><p>Текст блока и вопросы теста писали строго по найденным чанкам: брали определения, цифры, показания и примеры прямо из первоисточника.</p></div></div>
+      <div class="step"><div class="step-n">5</div><div><h4>Проверили, что ничего не выдумано</h4><p>Каждый факт в вопросе сверяли с чанком-источником. Если факта в чанках нет — вопрос не используем. Так курс остаётся достоверным.</p></div></div>
     </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
+  </section>
 
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #4</div>
-      <div class="cc-title">Мультифакториальное заболевание с наследственным предрасположением</div>
-      <div class="cc-desc">
-        Разбор болезни с накоплением в семье. Студент применяет пороговую модель мультифакториального наследования, рассчитывает риск по эмпирическим таблицам, формирует рекомендации по профилактике.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">НПД</span>
-        <span class="key-pill">Пороговая модель</span>
-      </div>
+  <!-- MAPPING: materials -->
+  <section class="section">
+    <div class="slabel">Соответствие блоков и чанков · часть 1</div>
+    <div class="stitle">Учебные материалы → какие чанки использовали</div>
+    <p class="lead">В курсе есть текстовые материалы (теория) и видеолекции. Ниже — из каких чанков собран каждый текстовый материал.</p>
+    <div class="tablewrap"><div class="tablescroll">
+      <table>
+        <thead><tr><th>Материал курса</th><th>Чанки</th><th>Что отсюда взяли</th></tr></thead>
+        <tbody>
+<tr><td class="mblock">Молекулярные и цитологические основы наследственности</td><td class="mchunks">УМП №0003–0005</td><td class="mwhy">Термины генетики, как устроен геном человека, виды хромосом.</td></tr>
+<tr><td class="mblock">Гены, признаки и изменчивость</td><td class="mchunks">УМП №0003–0004, 0011–0012</td><td class="mwhy">Базовые понятия + основные типы наследования (как признак передаётся потомкам).</td></tr>
+<tr><td class="mblock">Классификация наследственных болезней</td><td class="mchunks">УМП №0006</td><td class="mwhy">Деление болезней на хромосомные, моногенные и с предрасположением.</td></tr>
+<tr><td class="mblock">Хромосомные болезни: анеуплоидии и структурные аберрации</td><td class="mchunks">УМП №0007–0009</td><td class="mwhy">Примеры синдромов (Дауна, Эдвардса) и перестроек хромосом.</td></tr>
+<tr><td class="mblock">Моногенные формы наследственных болезней</td><td class="mchunks">УМП №0010–0012</td><td class="mwhy">Болезни одного гена, законы Менделя, Х-сцепленные болезни.</td></tr>
+<tr><td class="mblock">Болезни с наследственным предрасположением</td><td class="mchunks">УМП №0006 (+ клинические источники)</td><td class="mwhy">Мультифакториальные болезни — где играют роль и гены, и среда.</td></tr>
+<tr><td class="mblock">Кариотипирование: метод и показания</td><td class="mchunks">УМП №0013–0016</td><td class="mwhy">Что это за анализ, как делается, кому назначают, его пределы.</td></tr>
+<tr><td class="mblock">Молекулярно-генетические методы диагностики</td><td class="mchunks">УМП №0017–0027</td><td class="mwhy">FISH, ХМА (микроматрица), NGS-секвенирование, ПЦР и др.</td></tr>
+<tr><td class="mblock">Скрининг носительства и медико-генетическое консультирование</td><td class="mchunks">УМП №0027–0029 + ДПО №0018–0019</td><td class="mwhy">Проверка будущих родителей на «скрытые» болезни, как консультируют.</td></tr>
+<tr><td class="mblock">Пренатальная диагностика, ПГТ и ВРТ</td><td class="mchunks">УМП №0030–0036</td><td class="mwhy">Тестирование эмбриона (ПГТ) и плода (НИПТ) до и во время беременности.</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #5</div>
-      <div class="cc-title">Нарушение полового развития (DSD): дисгенезия гонад, 45,X0 (синдром Тёрнера)</div>
-      <div class="cc-desc">
-        Первичная аменорея у девушки-подростка. Студент анализирует клинические признаки, интерпретирует кариотип 45,X0, назначает ЗГТ, консультирует семью о прогнозе фертильности.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">DSD</span>
-        <span class="key-pill">45,X0 Тёрнер</span>
-        <span class="key-pill">ЗГТ</span>
-      </div>
+    <div class="tcap">📹 Четыре видеолекции — это отдельные записи лекций (загружены через Kinescope). Они не собирались из чанков, а добавлены целиком как готовые видео.</div>
     </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
+  </section>
 
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #6</div>
-      <div class="cc-title">Синдром тестикулярной феминизации (CAIS): кариотип 46,XY у фенотипической женщины</div>
-      <div class="cc-desc">
-        Первичная аменорея, кариотип 46,XY, нечувствительность к андрогенам (мутация AR). Студент разбирает диагностику СHIA, показания к гонадэктомии, психологические аспекты МГК, ЗГТ эстрогенами.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">CAIS</span>
-        <span class="key-pill">46,XY DSD</span>
-        <span class="key-pill">Мутация AR</span>
-      </div>
+  <!-- MAPPING: tests -->
+  <section class="section">
+    <div class="slabel">Соответствие блоков и чанков · часть 2</div>
+    <div class="stitle">Тесты → какие чанки использовали</div>
+    <p class="lead">У каждой темы есть основной тест (клинический случай) и <b>дополнительный тест</b> — он включается, если основной не сдан с первого раза, и помогает подтянуть именно эту тему. Ниже показано, на какие чанки опираются вопросы.</p>
+    <div class="tablewrap"><div class="tablescroll">
+      <table>
+        <thead><tr><th>Тест</th><th>Чанки</th><th>Что проверяет</th></tr></thead>
+        <tbody>
+<tr><td class="mblock">Основы наследственности (доп. тест 511)</td><td class="mchunks">УМП №0003–0005, 0011–0012</td><td class="mwhy">Проверяет понимание терминов и того, как наследуются признаки.</td></tr>
+<tr><td class="mblock">Хромосомные болезни: кариотип и показания (доп. 512)</td><td class="mchunks">УМП №0006–0009, 0013–0016</td><td class="mwhy">Распознать хромосомный синдром и выбрать нужный анализ.</td></tr>
+<tr><td class="mblock">Моногенные болезни: аллели и FISH-метод (доп. 513)</td><td class="mchunks">УМП №0010–0012, 0017–0019</td><td class="mwhy">Болезни одного гена и применение метода FISH.</td></tr>
+<tr><td class="mblock">Мультифакториальные болезни и ВПС плода (доп. 514)</td><td class="mchunks">УМП №0006, 0034–0036</td><td class="mwhy">Пороки развития плода и роль НИПТ-скрининга.</td></tr>
+<tr><td class="mblock">Нарушения полового развития: дифдиагноз (доп. 515)</td><td class="mchunks">УМП №0007, 0012–0013</td><td class="mwhy">Разбор случаев нарушений половых хромосом.</td></tr>
+<tr><td class="mblock">Лабораторные методы генетической диагностики (доп. 516)</td><td class="mchunks">УМП №0013–0027</td><td class="mwhy">Выбрать правильный метод под клиническую задачу.</td></tr>
+<tr><td class="mblock">МГК и профилактика наследственной патологии (доп. 517)</td><td class="mchunks">УМП №0027–0029 + ДПО №0003–0008</td><td class="mwhy">Консультирование семьи и профилактика болезней.</td></tr>
+<tr><td class="mblock">Пренатальная диагностика и периконцепционная профилактика (доп. 518)</td><td class="mchunks">УМП №0027–0036</td><td class="mwhy">Тактика обследования до и во время беременности.</td></tr>
+<tr><td class="mblock">Итоговая аттестация по программе (тест 509)</td><td class="mchunks">Все темы УМП + ДПО №0019</td><td class="mwhy">Финальный тест по всему курсу — собран из вопросов всех блоков.</td></tr>
+        </tbody>
+      </table>
+    </div></div>
+  </section>
+
+  <!-- FULL CHUNK LIST: UMP -->
+  <section class="section">
+    <div class="slabel">Полный список чанков · по каждому</div>
+    <div class="stitle">📘 Учебник (УМП) — 45 чанков</div>
+    <p class="lead">Полная опись банка контента из учебника. «№» — короткий номер чанка, по нему его легко найти в таблицах соответствия выше.</p>
+    <div class="tablewrap"><div class="tablescroll">
+      <table>
+        <thead><tr><th>#</th><th>№ чанка</th><th>Раздел учебника</th><th>Что внутри</th></tr></thead>
+        <tbody>
+<tr><td class="cnum">1</td><td class="cid">№0000</td><td class="csec">ПРИМЕНЕНИЕ ГЕНЕТИЧЕСКИХ ИССЛЕДОВАНИЙ 
+В ПРАКТИКЕ ВРАЧА-АКУШЕРА-ГИНЕКОЛ</td><td class="csum">Описывает: титульный лист УМП «Применение генетических исследований в практике врача-акушера-гинеколога» — авторский коллектив Эвоген и московских больниц, 2026 год.</td></tr>
+<tr><td class="cnum">2</td><td class="cid">№0001</td><td class="csec">Авторы:</td><td class="csum">Содержит: расширенный список авторов УМП — специалисты Эвоген (генетики, лабораторные врачи, онкогенетики) и ведущих московских клиник (ГКБ №67, №31, ЦПСиР, ГКБ им. Юдина, МГНЦ).</td></tr>
+<tr><td class="cnum">3</td><td class="cid">№0002</td><td class="csec">Авторы:</td><td class="csum">Описывает: целевую аудиторию УМП — акушеры-гинекологи, врачи-генетики, ординаторы, слушатели НМО; издано по решению учебно-методической комиссии ФГБНУ МГНЦ им. Бочкова.</td></tr>
+<tr><td class="cnum">4</td><td class="cid">№0003</td><td class="csec">ОСНОВНЫЕ ТЕРМИНЫ И ПОНЯТИЯ, ОРГАНИЗАЦИЯ ЧЕЛОВЕЧЕСКОГО ГЕНОМА</td><td class="csum">Содержит: базовые термины генетики — наследственность, изменчивость, ген, аллели, локус, генотип, фенотип, доминантность, рецессивность, организация хромосом человека (46 хромосом, 22 пары аутосом + пара половых).</td></tr>
+<tr><td class="cnum">5</td><td class="cid">№0004</td><td class="csec">ОСНОВНЫЕ ТЕРМИНЫ И ПОНЯТИЯ, ОРГАНИЗАЦИЯ ЧЕЛОВЕЧЕСКОГО ГЕНОМА</td><td class="csum">Включает: расширенные понятия генетики — аллели, гомозиготность, гетерозиготность, гемизиготность, кодоминирование, экспрессивность, пенетрантность; структура хромосом (плечи p и q, центромера, теломеры).</td></tr>
+<tr><td class="cnum">6</td><td class="cid">№0005</td><td class="csec">ОСНОВНЫЕ ТЕРМИНЫ И ПОНЯТИЯ, ОРГАНИЗАЦИЯ ЧЕЛОВЕЧЕСКОГО ГЕНОМА</td><td class="csum">Описывает: классификацию хромосом по длине плеч — метацентрические, субметацентрические, акроцентрические, телоцентрические; понятие кариотипа как полного набора хромосом соматической клетки.</td></tr>
+<tr><td class="cnum">7</td><td class="cid">№0006</td><td class="csec">2. НАСЛЕДСТВЕННЫЕ БОЛЕЗНИ</td><td class="csum">Содержит: классификацию наследственных заболеваний по типу генетического дефекта — хромосомные аномалии (числовые и структурные), моногенные болезни, мультифакторные заболевания, митохондриальные болезни.</td></tr>
+<tr><td class="cnum">8</td><td class="cid">№0007</td><td class="csec">Примеры анеуплоидий:</td><td class="csum">Включает: примеры анеуплоидий — синдром Дауна (трисомия 21), синдром Эдвардса (трисомия 18), синдром Патау (трисомия 13), синдром Тернера (45,X), синдром Клайнфельтера (47,XXY).</td></tr>
+<tr><td class="cnum">9</td><td class="cid">№0008</td><td class="csec">Примеры внутрихромосомных структурных аберраций (изменения внутри одно</td><td class="csum">Содержит: примеры внутрихромосомных структурных аберраций — делеции (del 22q11.2, del 5p — синдром кошачьего крика), дупликации, инверсии, кольцевые хромосомы и их клинические последствия.</td></tr>
+<tr><td class="cnum">10</td><td class="cid">№0009</td><td class="csec">Примеры межхромосомных структурных аберраций (изменения между негомоло</td><td class="csum">Включает: примеры межхромосомных структурных аберраций — нереципрокные и реципрокные транслокации, Робертсоновские транслокации (между акроцентрическими хромосомами 13,14,15,21,22) и их роль в хромосомных болезнях.</td></tr>
+<tr><td class="cnum">11</td><td class="cid">№0010</td><td class="csec">Примеры межхромосомных структурных аберраций (изменения между негомоло</td><td class="csum">Описывает: моногенные заболевания, наследующиеся по законам Менделя — аутосомно-доминантные, аутосомно-рецессивные, Х-сцепленные; понятие пенетрантности и экспрессивности в менделирующих болезнях.</td></tr>
+<tr><td class="cnum">12</td><td class="cid">№0011</td><td class="csec">3. ТИПЫ НАСЛЕДОВАНИЯ</td><td class="csum">Содержит: основные типы наследования — аутосомно-доминантный (АД), аутосомно-рецессивный (АР), Х-сцепленный доминантный, Х-сцепленный рецессивный, Y-сцепленный, митохондриальный с характеристиками каждого типа.</td></tr>
+<tr><td class="cnum">13</td><td class="cid">№0012</td><td class="csec">3. ТИПЫ НАСЛЕДОВАНИЯ</td><td class="csum">Включает: примеры Х-сцепленных заболеваний — синдром Ретта (Х-доминантное), гемофилия A и B, мышечная дистрофия Дюшенна/Беккера (Х-рецессивные); концепция носительства у женщин.</td></tr>
+<tr><td class="cnum">14</td><td class="cid">№0013</td><td class="csec">1. ЦИТОГЕНЕТИЧЕСКОЕ ИССЛЕДОВАНИЕ (КАРИОТИПИРОВАНИЕ)</td><td class="csum">Описывает: метод кариотипирования — определение числа и структуры хромосом, применение в диагностике хромосомных болезней, историю метода, показания к проведению (врождённые пороки, бесплодие, невынашивание).</td></tr>
+<tr><td class="cnum">15</td><td class="cid">№0014</td><td class="csec">1. ЦИТОГЕНЕТИЧЕСКОЕ ИССЛЕДОВАНИЕ (КАРИОТИПИРОВАНИЕ)</td><td class="csum">Содержит: технические аспекты кариотипирования — методы окраски (GTG-бэндинг), разрешающая способность, история открытия хромосомных болезней; ограничения стандартного кариотипа (не выявляет мелкие перестройки &lt;5 Мб).</td></tr>
+<tr><td class="cnum">16</td><td class="cid">№0015</td><td class="csec">1. ЦИТОГЕНЕТИЧЕСКОЕ ИССЛЕДОВАНИЕ (КАРИОТИПИРОВАНИЕ)</td><td class="csum">Включает: клинические показания к кариотипированию плода — нарушения интеллектуального/психомоторного/полового развития, аномалии строения половых органов, множественные врождённые пороки, задержка роста.</td></tr>
+<tr><td class="cnum">17</td><td class="cid">№0016</td><td class="csec">1. ЦИТОГЕНЕТИЧЕСКОЕ ИССЛЕДОВАНИЕ (КАРИОТИПИРОВАНИЕ)</td><td class="csum">Описывает: ограничения кариотипирования — низкоуровневый мозаицизм (&lt;5%), тканеспецифичный мозаицизм; альтернативные методы диагностики при подозрении на мозаицизм (ХМА, FISH на большем числе клеток).</td></tr>
+<tr><td class="cnum">18</td><td class="cid">№0017</td><td class="csec">ФЛЮОРЕСЦЕНТНАЯ ГИБРИДИЗАЦИЯ IN SITU</td><td class="csum">Содержит: метод флюоресцентной гибридизации in situ (FISH) — принцип мечения ДНК-зондов флуорохромами, типы зондов (локус-специфичные, центромерные, субтеломерные), применение для диагностики делеций и транслокаций.</td></tr>
+<tr><td class="cnum">19</td><td class="cid">№0018</td><td class="csec">ФЛЮОРЕСЦЕНТНАЯ ГИБРИДИЗАЦИЯ IN SITU</td><td class="csum">Описывает: практическое применение FISH с центромерными зондами для диагностики анеуплоидий (хромосомы 3, 7, 8, X, Y) в амниоцитах и ворсинах хориона; интерпретация цветовых сигналов.</td></tr>
+<tr><td class="cnum">20</td><td class="cid">№0019</td><td class="csec">ФЛЮОРЕСЦЕНТНАЯ ГИБРИДИЗАЦИЯ IN SITU</td><td class="csum">Включает: многоцветные молекулярно-цитогенетические методы на основе FISH — M-FISH, SKY (спектральный кариотип), позволяющие одновременно идентифицировать все 24 типа хромосом; применение при сложных хромосомных перестройках.</td></tr>
+<tr><td class="cnum">21</td><td class="cid">№0020</td><td class="csec">ХРОМОСОМНЫЙ МИКРОМАТРИЧНЫЙ АНАЛИЗ</td><td class="csum">Описывает: хромосомный микроматричный анализ (ХМА) — молекулярно-генетическое исследование для выявления копийных вариаций (CNV) по всему геному с высоким разрешением; типы платформ (CGH-массивы, SNP-массивы).</td></tr>
+<tr><td class="cnum">22</td><td class="cid">№0021</td><td class="csec">ХРОМОСОМНЫЙ МИКРОМАТРИЧНЫЙ АНАЛИЗ</td><td class="csum">Содержит: преимущества ХМА при пренатальной диагностике — возможность исследования ДНК без культивирования клеток, устойчивость к транспортировке образца, применимость при неудаче кариотипа.</td></tr>
+<tr><td class="cnum">23</td><td class="cid">№0022</td><td class="csec">ХРОМОСОМНЫЙ МИКРОМАТРИЧНЫЙ АНАЛИЗ</td><td class="csum">Включает: ограничения ХМА — невозможность выявить сбалансированные хромосомные аберрации, низкоуровневый мозаицизм (&lt;10-20%), полиплоидию; варианты неопределённой клинической значимости (VUS).</td></tr>
+<tr><td class="cnum">24</td><td class="cid">№0023</td><td class="csec">ВЫСОКОПРОИЗВОДИТЕЛЬНОЕ СЕКВЕНИРОВАНИЕ</td><td class="csum">Описывает: высокопроизводительное секвенирование (NGS/WES/WGS) — принципы работы, типы платформ (Illumina, Ion Torrent), панельное секвенирование, экзомное (WES) и полногеномное (WGS) секвенирование.</td></tr>
+<tr><td class="cnum">25</td><td class="cid">№0024</td><td class="csec">ВЫСОКОПРОИЗВОДИТЕЛЬНОЕ СЕКВЕНИРОВАНИЕ</td><td class="csum">Содержит: полногеномное секвенирование (WGS) — определение всей ДНК человека включая некодирующие последовательности; сравнение WGS с WES по покрытию, стоимости и диагностической чувствительности.</td></tr>
+<tr><td class="cnum">26</td><td class="cid">№0025</td><td class="csec">ДРУГИЕ МЕТОДЫ</td><td class="csum">Включает: другие молекулярно-генетические методы — ПЦР (количественное определение специфических последовательностей), MLPA (множественное лигирование с амплификацией зондов) для диагностики делеций/дупликаций.</td></tr>
+<tr><td class="cnum">27</td><td class="cid">№0026</td><td class="csec">ДРУГИЕ МЕТОДЫ</td><td class="csum">Описывает: методы гибридизации на микрочипах (NGS на микросферах и искусственных бактериальных хромосомах); применение в диагностике хромосомных заболеваний и определении носительства моногенных болезней.</td></tr>
+<tr><td class="cnum">28</td><td class="cid">№0027</td><td class="csec">ПРЕКОНЦЕПЦИОННЫЙ СКРИНИНГ</td><td class="csum">Содержит: преконцепционный скрининг (ПС) носительства — генетическое тестирование партнёров до беременности для выявления носительства АР- и Х-сцепленных заболеваний; показания и критерии отбора заболеваний для ПС.</td></tr>
+<tr><td class="cnum">29</td><td class="cid">№0028</td><td class="csec">ПРЕКОНЦЕПЦИОННЫЙ СКРИНИНГ</td><td class="csum">Включает: критерии включения заболеваний в панель ПС по рекомендациям ACMG 2021 — частота носительства ≥1:200, тяжёлое клиническое течение, ранняя манифестация; список из &gt;200 заболеваний.</td></tr>
+<tr><td class="cnum">30</td><td class="cid">№0029</td><td class="csec">ПРЕКОНЦЕПЦИОННЫЙ СКРИНИНГ</td><td class="csum">Описывает: постконсультационные ресурсы для носителей при ПС — информационные базы данных, варианты репродуктивного выбора (ПГТ, пренатальная диагностика, донорство гамет, усыновление).</td></tr>
+<tr><td class="cnum">31</td><td class="cid">№0030</td><td class="csec">2. ПРЕИМПЛАНТАЦИОННОЕ ГЕНЕТИЧЕСКОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Содержит: преимплантационное генетическое тестирование (ПГТ) в рамках ВРТ — ПГТ-А (анеуплоидий), ПГТ-М (моногенных болезней), ПГТ-СР (структурных перестроек хромосом); биопсия трофэктодермы на 5-6 день.</td></tr>
+<tr><td class="cnum">32</td><td class="cid">№0031</td><td class="csec">2. ПРЕИМПЛАНТАЦИОННОЕ ГЕНЕТИЧЕСКОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Включает: расширенные типы ПГТ — ПГТ-плюс (ПГТ-М+ПГТ-А), ПГТ-НЛА (наследственной предрасположенности); биоматериал (биоптат трофэктодермы), методы анализа (NGS, ХМА, ПЦР), сроки получения результатов.</td></tr>
+<tr><td class="cnum">33</td><td class="cid">№0032</td><td class="csec">2. ПРЕИМПЛАНТАЦИОННОЕ ГЕНЕТИЧЕСКОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Описывает: показания к ПГТ — носительство АР/АД/Х-сцепленных заболеваний, хромосомные перестройки у родителей, носительство мутаций мтДНК; противопоказания и ограничения ПГТ.</td></tr>
+<tr><td class="cnum">34</td><td class="cid">№0033</td><td class="csec">2. ПРЕИМПЛАНТАЦИОННОЕ ГЕНЕТИЧЕСКОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Содержит: этические и правовые аспекты ПГТ — запрет на выбор пола в немедицинских целях, конфиденциальность генетической информации об эмбрионе, ограничения по российскому законодательству.</td></tr>
+<tr><td class="cnum">35</td><td class="cid">№0034</td><td class="csec">3. НЕИНВАЗИВНОЕ ПРЕНАТАЛЬНОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Описывает: неинвазивное пренатальное тестирование (НИПТ) — скрининг I триместра, анализ внеклеточной фетальной ДНК (вкфДНК) в материнской крови для выявления трисомий 21, 18, 13 и анеуплоидий половых хромосом.</td></tr>
+<tr><td class="cnum">36</td><td class="cid">№0035</td><td class="csec">3. НЕИНВАЗИВНОЕ ПРЕНАТАЛЬНОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Включает: биологические основы НИПТ — источники вкфДНК (апоптоз трофобласта), фетальная фракция (≥4% с 10 нед), факторы влияния на фетальную фракцию (ИМТ матери, срок беременности, многоплодие).</td></tr>
+<tr><td class="cnum">37</td><td class="cid">№0036</td><td class="csec">3. НЕИНВАЗИВНОЕ ПРЕНАТАЛЬНОЕ ТЕСТИРОВАНИЕ</td><td class="csum">Содержит: технологии НИПТ — секвенирование на ДНК-наношариках, методы массивного параллельного секвенирования (MPS), принцип подсчёта хромосомных долей для выявления трисомий; чувствительность &gt;99% для трисомии 21.</td></tr>
+<tr><td class="cnum">38</td><td class="cid">№0037</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Содержит: список литературы УМП — раздел 1, включая учебники по генетике (Ткачук, Семинский), клинические рекомендации, байкальский медицинский журнал.</td></tr>
+<tr><td class="cnum">39</td><td class="cid">№0038</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Включает: список литературы — ссылки на ресурсы кариотипирования Mayo Clinic, руководства по цитогенетике, научные статьи о хромосомных аномалиях плода (мягкие маркеры, мета-анализы).</td></tr>
+<tr><td class="cnum">40</td><td class="cid">№0039</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Содержит: список литературы по FISH и ХМА — исследования об эффективности ХМА при УЗ-мягких маркерах, мета-анализы по диагностической ценности молекулярной цитогенетики.</td></tr>
+<tr><td class="cnum">41</td><td class="cid">№0040</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Включает: список литературы по полногеномному секвенированию (WGS) — научные публикации из Reference Module in Life Sciences, Kwoh и соавт.</td></tr>
+<tr><td class="cnum">42</td><td class="cid">№0041</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Содержит: список литературы по ПГТ и НИПТ — журнал «Медицинская генетика», клинические рекомендации по ПГТ, российские и международные публикации.</td></tr>
+<tr><td class="cnum">43</td><td class="cid">№0042</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Включает: список литературы по НИПТ — статьи журнала Probl Reprod 2019, Bakalova и соавт. по неинвазивному пренатальному тестированию, сравнительные исследования методов.</td></tr>
+<tr><td class="cnum">44</td><td class="cid">№0043</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Содержит: список литературы — методические рекомендации по проведению НИПТ (Жученко, Гринь, Ижевская), российские клинические рекомендации по неинвазивному пренатальному тесту.</td></tr>
+<tr><td class="cnum">45</td><td class="cid">№0044</td><td class="csec">СПИСОК ИСПОЛЬЗОВАННОЙ ЛИТЕРАТУРЫ</td><td class="csum">Включает: список литературы — исследования по мозаицизму у матери как причине несоответствия НИПТ и кариотипа плода (Tian F. и соавт.), анеуплоидии половых хромосом.</td></tr>
+        </tbody>
+      </table>
+    </div></div>
+  </section>
+
+  <!-- FULL CHUNK LIST: DPO -->
+  <section class="section">
+    <div class="stitle">📋 Программа ДПО — 22 чанка</div>
+    <p class="lead">Эти чанки описывают официальную «рамку» курса. Большинство из них — про организацию обучения, компетенции и литературу, поэтому в вопросы тестов они почти не попадают: их роль — задать структуру курса и итоговую аттестацию.</p>
+    <div class="tablewrap"><div class="tablescroll">
+      <table>
+        <thead><tr><th>#</th><th>№ чанка</th><th>Раздел программы</th><th>Что внутри</th></tr></thead>
+        <tbody>
+<tr><td class="cnum">1</td><td class="cid">№0000</td><td class="csec">в акушерстве и гинекологии»</td><td class="csum">Содержит: Реквизиты программы повышения квалификации по пренатальной диагностике (36 часов, очная форма). Указаны основная специальность — акушерство и гинекология, смежная специальность — генетика, а также реквизиты утверждения программы методическим советом ООО «Эвоген» (наименование организации, дата и номер протокола).</td></tr>
+<tr><td class="cnum">2</td><td class="cid">№0001</td><td class="csec">Программа повышения квалификации разработана на основании:</td><td class="csum">Содержит: перечень нормативно-правовых оснований разработки программы повышения квалификации — федеральные законы об образовании и охране здоровья, приказы Минобрнауки и Минздрава, устанавливающие порядок организации дополнительного профессионального образования, квалификационные требования к врачам-акушерам-гинекологам и генетикам, а также федеральные образовательные стандарты для подготовки кадров высшей квалификации.</td></tr>
+<tr><td class="cnum">3</td><td class="cid">№0002</td><td class="csec">Цель реализации программы</td><td class="csum">Описывает: целевую установку программы повышения квалификации, направленную на развитие компетенций врачей-акушеров-гинекологов и генетиков в области пренатальной диагностики. Ключевые направления: организация диагностических процессов, выявление врожденных и наследственных заболеваний, их профилактика.</td></tr>
+<tr><td class="cnum">4</td><td class="cid">№0003</td><td class="csec">Планируемые результаты обучения по программе</td><td class="csum">Содержит: профессиональную компетенцию ПК-1, определяющую способность врача обосновывать и планировать объем лабораторных исследований при беременности, послеродовом периоде, прерывании беременности, гинекологических заболеваниях и доброкачественных изменениях молочных желез. Ключевые элементы: лабораторная диагностика, планирование обследования, акушерско-гинекологическая патология.</td></tr>
+<tr><td class="cnum">5</td><td class="cid">№0004</td><td class="csec">з н а т ь:</td><td class="csum">Включает: компетенции специалиста по владению методами лабораторной и инструментальной диагностики при беременности, родах и послеродовом периоде, с правилами интерпретации результатов; критерии направления пациентов на консультации к узким специалистам для уточнения диагноза при акушерско-гинекологической патологии и заболеваниях молочных желез.</td></tr>
+<tr><td class="cnum">6</td><td class="cid">№0005</td><td class="csec">у м е т ь:</td><td class="csum">Включает: компетенции по планированию объема лабораторных исследований при беременности и гинекологических патологиях согласно порядкам оказания помощи и клиническим рекомендациям; определение показаний для направления пациентов на консультации к специалистам; интерпретацию результатов диагностики врожденных и наследственных заболеваний.</td></tr>
+<tr><td class="cnum">7</td><td class="cid">№0006</td><td class="csec">з н а т ь:</td><td class="csum">Включает два блока знаний: (1) нормативно-правовую базу оказания медицинской помощи при врождённых и наследственных заболеваниях, включая порядки, клинические рекомендации и стандарты; (2) методы пренатальной диагностики и профилактики наследственной патологии. Ориентирована на практическое применение в рамках акушерско-гинекологической специализации.</td></tr>
+<tr><td class="cnum">8</td><td class="cid">№0007</td><td class="csec">у м е т ь:</td><td class="csum">Включает: индикаторы компетенции ПК-2, определяющие умения врача обосновывать направление пациентов к специалистам для диагностики врожденных и наследственных заболеваний, а также планировать лабораторные и инструментальные исследования в соответствии с клиническими рекомендациями и стандартами медицинской помощи.</td></tr>
+<tr><td class="cnum">9</td><td class="cid">№0008</td><td class="csec">1.3. Требования к уровню подготовки лиц, принимаемых для обучения по п</td><td class="csum">Содержит: ссылку на нормативно-правовые акты Минздрава России (приказы № 206н от 02.05.2023 и № 72н от 19.02.2024), определяющие квалификационные требования к медицинским и фармацевтическим работникам с высшим образованием для допуска к программе повышения квалификации по пренатальной диагностике. Устанавливает нормативную базу для входных требований слушателей.</td></tr>
+<tr><td class="cnum">10</td><td class="cid">№0009</td><td class="csec">1.6. Режим учебных занятий по программе</td><td class="csum">Содержит: норматив максимальной еженедельной учебной нагрузки (не более 40 академических часов) при реализации программы повышения квалификации по пренатальной диагностике, охватывающей все формы обучения и виды учебной деятельности (аудиторную и внеаудиторную работу обучающихся).</td></tr>
+<tr><td class="cnum">11</td><td class="cid">№0010</td><td class="csec">2.4. Рабочая программа учебных модулей / разделов программы</td><td class="csum">Содержит: классификацию и сокращенный перечень образовательных технологий для программы повышения квалификации, включая интерактивные методы (проблемная лекция, тренинг, мастер-класс, разбор клинических случаев), симуляционное обучение (тренажеры, компьютерная симуляция), групповые форматы (малые группы, круглый стол, конференции) и дистанционные технологии.</td></tr>
+<tr><td class="cnum">12</td><td class="cid">№0011</td><td class="csec">Рекомендуемая литература:</td><td class="csum">Содержит: основной список учебной и справочной литературы по медицинской генетике, персонализированной медицине и пренатальной диагностике. Включает монографии и руководства по генетике, омикс-технологиям, интерпретации данных массового параллельного секвенирования (MPS) и современным методам диагностики, опубликованные в 2020–2025 годах.</td></tr>
+<tr><td class="cnum">13</td><td class="cid">№0012</td><td class="csec">Рекомендуемая литература:</td><td class="csum">Содержит: библиографические ссылки на научные статьи по медицинской генетике, включающие материалы о микроматричном анализе (array-CGH) и практические рекомендации по стандартизации цитогенетических исследований, качеству и надежности методов генетической диагностики, опубликованные в журнале «Медицинская генетика» (2019, 2023).</td></tr>
+<tr><td class="cnum">14</td><td class="cid">№0013</td><td class="csec">б) Дополнительная литература:</td><td class="csum">Включает: перечень учебной и справочной литературы по медицинской генетике, ДНК-диагностике, медико-генетическому консультированию и наследственным болезням. Охватывает ключевые издания по геномике, генетике человека (том Фогеля и Мотулски) и национальные клинические руководства по акушерству для специалистов в области пренатальной диагностики.</td></tr>
+<tr><td class="cnum">15</td><td class="cid">№0014</td><td class="csec">в) Электронные образовательные ресурсы</td><td class="csum">Включает: подборку электронных образовательных ресурсов для специалистов по пренатальной диагностике — официальные сайты ВОЗ, российских научных центров медицинской генетики, образовательные платформы (Stepik), научные журналы (Nature Publishing Group, Oxford University Press, MDPI, Wiley) и базы данных (PubMed/Medline) для доступа к актуальной информации по генетической диагностике и акушерству.</td></tr>
+<tr><td class="cnum">16</td><td class="cid">№0015</td><td class="csec">Материально-технические условия реализации программы</td><td class="csum">Описывает материально-техническое оснащение программы повышения квалификации по пренатальной диагностике: типы учебных помещений (аудитории для лекций, семинаров, консультаций, самостоятельной работы), демонстрационное оборудование и учебно-наглядные пособия для лекционных занятий, компьютерную технику с доступом в Интернет и электронную информационно-образовательную среду.</td></tr>
+<tr><td class="cnum">17</td><td class="cid">№0016</td><td class="csec">Лицензионное программное обеспечение</td><td class="csum">Содержит: перечень лицензионного и свободно распространяемого программного обеспечения, обеспечивающего технологическую базу образовательной программы по пренатальной диагностике. Включает операционную систему Windows, офисные приложения (LibreOffice, MS Office) и антивирусное ПО Kaspersky Anti-Virus Suite с упором на отечественные решения.</td></tr>
+<tr><td class="cnum">18</td><td class="cid">№0017</td><td class="csec">Доступ к профессиональным базам данных и к информационным справочным с</td><td class="csum">Включает: перечень профессиональных баз данных и информационных справочных систем, предоставляемых обучающимся программы. Содержит ссылки на ресурсы Минздрава России, электронные медицинские библиотеки, официальные порталы государственных органов надзора и ассоциацию лабораторной медицины для поддержки образовательного процесса по пренатальной диагностике.</td></tr>
+<tr><td class="cnum">19</td><td class="cid">№0018</td><td class="csec">ФОРМЫ АТТЕСТАЦИИ</td><td class="csum">Содержит: описание форм аттестации по программе повышения квалификации — текущего контроля (тестирование, ситуационные задачи, контрольные вопросы, практические задания) и итоговой аттестации в форме зачета. Регламентирует оценку теоретической и практической подготовки врача-специалиста в соответствии с квалификационными требованиями и профессиональными стандартами.</td></tr>
+<tr><td class="cnum">20</td><td class="cid">№0019</td><td class="csec">Оценочные средства для итоговой аттестации (ПК-1, ПК-2)</td><td class="csum">Содержит: оценочные средства для итоговой аттестации ПК-1 и ПК-2 — тестовые вопросы по кариотипу, хромосомным аномалиям и пренатальной диагностике (НИПТ, инвазивные методы).</td></tr>
+<tr><td class="cnum">21</td><td class="cid">№0020</td><td class="csec">АННОТАЦИЯ ПРОГРАММЫ ПОВЫШЕНИЯ КВАЛИФИКАЦИИ</td><td class="csum">Описывает: аннотацию программы ПК по пренатальной диагностике Эвоген — актуальность, цели, результаты обучения; обоснование необходимости повышения квалификации акушеров-гинекологов и генетиков.</td></tr>
+<tr><td class="cnum">22</td><td class="cid">№0021</td><td class="csec">Сведения о составителях программы</td><td class="csum">Содержит: сведения о разработчиках программы — О.В. Сагайдак (зам. генерального директора Эвоген), М.Т. Капланова (руководитель направления пренатальной диагностики), А.М. Галактионова.</td></tr>
+        </tbody>
+      </table>
+    </div></div>
+  </section>
+
+  <!-- TERMS -->
+  <section class="section">
+    <div class="slabel">Чтобы не путаться</div>
+    <div class="stitle">Простые названия вместо сложных</div>
+    <div class="terms">
+      <div class="term"><b>Чанк</b> <span class="arrow">→</span> <span>кусочек учебника (одна «карточка»)</span></div>
+      <div class="term"><b>Дополнительный тест</b> <span class="arrow">→</span> <span>тест-помощник, если основной не сдан</span></div>
+      <div class="term"><b>Блок</b> <span class="arrow">→</span> <span>одна тема курса: материал + тест по ней</span></div>
+      <div class="term"><b>Первоисточник</b> <span class="arrow">→</span> <span>документ, из которого всё взято (учебник / программа)</span></div>
     </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
+  </section>
 
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #7</div>
-      <div class="cc-title">Показания к пренатальной диагностике: инвазивные методы</div>
-      <div class="cc-desc">
-        Беременная с отягощённым анамнезом. Студент выбирает метод инвазивной ПД (биопсия ворсин хориона, амниоцентез, кордоцентез), интерпретирует результаты, консультирует по тактике.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">Инвазивная ПД</span>
-        <span class="key-pill">Амниоцентез</span>
-        <span class="key-pill">БВХ</span>
-      </div>
-    </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #8</div>
-      <div class="cc-title">Медико-генетическое консультирование: носительство и расчёт риска</div>
-      <div class="cc-desc">
-        Пара обратилась в МГК. Студент строит родословную, рассчитывает вероятность носительства, оценивает риск для потомства, выбирает тактику — скрининг носительства или ПГТ.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">МГК</span>
-        <span class="key-pill">Носительство</span>
-        <span class="key-pill">Родословная</span>
-      </div>
-    </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-clinical">🧬</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #9</div>
-      <div class="cc-title">Пренатальная диагностика и периконцепционная профилактика</div>
-      <div class="cc-desc">
-        Беременная с рисками по скринингу I триместра. Студент анализирует маркёры, результаты НИПТ, показания к ПГТ при ЭКО, периконцепционный приём фолатов, планирование следующей беременности.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">НИПТ</span>
-        <span class="key-pill">Скрининг I триместра</span>
-        <span class="key-pill">ПГТ</span>
-      </div>
-    </div>
-    <div class="cc-right"><span class="badge badge-clinical">Клин. случай</span></div>
-  </div>
-
-  <div class="content-card" style="border-color:#86efac; background:#f0fdf4">
-    <div class="cc-icon icon-itog">🏆</div>
-    <div class="cc-body">
-      <div class="cc-label">Клинический случай #10 · Итоговая аттестация</div>
-      <div class="cc-title">BRCA1: наследственный рак молочной железы и яичников</div>
-      <div class="cc-desc">
-        Пациентка с отягощённой наследственностью по НРМЖ. Студент разбирает мутацию BRCA1, показания к молекулярному тестированию родственников, стратегии профилактики (наблюдение vs профилактическая операция), МГК.
-      </div>
-      <div>
-        <span class="key-pill">23 шага</span>
-        <span class="key-pill">BRCA1</span>
-        <span class="key-pill">Наследственный рак</span>
-        <span class="key-pill">Профилактическая тактика</span>
-      </div>
-    </div>
-    <div class="cc-right"><span class="badge badge-itog">Итоговый</span></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- SECTION 2: ADDITIONAL EXAM-STYLE TESTS -->
-  <div class="section-title" style="margin-top: 28px">
-    📝 Дополнительные тесты
-    <span class="section-chip badge-extra">9 блоков · открываются при результате &lt;70%</span>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #1</div>
-      <div class="cc-title">Основы наследственности: геном и АД-риск</div>
-      <div class="cc-desc">Теоретические вопросы по генетическим основам нейрофиброматоза: аллели, доминирование, расчёт риска по правилу Менделя. Открывается при неудовлетворительном результате в сценарии НФ1.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #2</div>
-      <div class="cc-title">Хромосомные болезни: кариотип и показания</div>
-      <div class="cc-desc">Числовые и структурные аномалии хромосом, показания к кариотипированию, трактовка результатов. Открывается после случая по синдрому Дауна.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #3</div>
-      <div class="cc-title">Моногенные болезни: аллели и FISH-метод</div>
-      <div class="cc-desc">Моногенное наследование и метод флюоресцентной гибридизации in situ (FISH): принципы, показания, интерпретация.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаям #4 и #5</div>
-      <div class="cc-title">Мультифакториальные болезни и ВПС плода</div>
-      <div class="cc-desc">Мультифакториальные заболевания и пренатально диагностируемые ВПС: пороговая модель, риск рецидива, тактика консультирования.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #6</div>
-      <div class="cc-title">Нарушения полового развития: дифференциальная диагностика</div>
-      <div class="cc-desc">Дифференциальный диагноз DSD: кариотип, уровни гормонов, нечувствительность к андрогенам, принципы ведения и психологического сопровождения.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #7</div>
-      <div class="cc-title">Лабораторные методы генетической диагностики</div>
-      <div class="cc-desc">Выбор метода диагностики и его ограничения: кариотипирование, FISH, ХМА, ПЦР, MLPA, NGS-панели, экзомное секвенирование.</div>
-      <div><span class="key-pill">18 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #8</div>
-      <div class="cc-title">МГК и профилактика наследственной патологии</div>
-      <div class="cc-desc">Медико-генетическое консультирование и преконцепционный скрининг: показания, расчёт риска, скрининг на носительство рецессивных мутаций.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-extra">📝</div>
-    <div class="cc-body">
-      <div class="cc-label">Доп. тест к случаю #9</div>
-      <div class="cc-title">Пренатальная диагностика и периконцепционная профилактика</div>
-      <div class="cc-desc">Преимплантационная и пренатальная диагностика: неинвазивный пренатальный тест (НИПТ), ПГТ, скрининг I триместра, периконцепционный приём фолатов.</div>
-      <div><span class="key-pill">16 вопросов</span><span class="key-pill">Экзаменационный формат</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-extra">Доп. тест</span></div>
-  </div>
-
-  <div class="content-card" style="border-color:#86efac; background:#f0fdf4">
-    <div class="cc-icon icon-itog">🏆</div>
-    <div class="cc-body">
-      <div class="cc-label">Итоговая аттестация (отдельный тест)</div>
-      <div class="cc-title">Итоговая аттестация по программе ДПО — Генетика 2026</div>
-      <div class="cc-desc">28 тестовых вопросов по всем 4 модулям курса. Часть вопросов допускает несколько правильных ответов. Открывается только после прохождения всех предыдущих шагов.</div>
-      <div><span class="key-pill">28 вопросов</span><span class="key-pill">Все темы курса</span><span class="key-pill">Несколько вариантов ответа</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-itog">Итоговый</span></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- SECTION 3: TEXT MATERIALS -->
-  <div class="section-title" style="margin-top: 28px">
-    📄 Текстовые материалы
-    <span class="section-chip badge-text">7 блоков · из УМП Эвоген</span>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 1 · Текст</div>
-      <div class="cc-title">Молекулярные и цитологические основы наследственности</div>
-      <div class="cc-desc">Строение ДНК и хромосом, понятие кариотипа, аллели, гомозиготность и гетерозиготность. Основа для всех последующих тем курса.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 1 · Текст</div>
-      <div class="cc-title">Гены, признаки и изменчивость</div>
-      <div class="cc-desc">Понятие гена и аллелей, типы взаимодействия аллелей, законы Менделя, доминирование и рецессивность.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 2 · Текст</div>
-      <div class="cc-title">Классификация наследственных болезней</div>
-      <div class="cc-desc">Хромосомные, моногенные и мультифакториальные болезни — группы, принципы разделения, примеры. Общая карта генетической патологии.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 2 · Текст</div>
-      <div class="cc-title">Хромосомные болезни: анеуплоидии и структурные аберрации</div>
-      <div class="cc-desc">Трисомии, моносомии, делеции, транслокации, инверсии — причины, механизмы, клинические проявления.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 2 · Текст</div>
-      <div class="cc-title">Моногенные болезни и болезни с наследственным предрасположением</div>
-      <div class="cc-desc">Аутосомно-доминантные, аутосомно-рецессивные и X-сцепленные болезни. Мультифакториальные заболевания: пороговая модель и риск рецидива.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 3 · Текст</div>
-      <div class="cc-title">Кариотипирование и молекулярно-генетические методы диагностики</div>
-      <div class="cc-desc">Цитогенетика (кариотип, FISH), ПЦР, MLPA, хромосомный микроматричный анализ (ХМА), NGS-панели, экзомное секвенирование — принципы, показания, ограничения.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-text">📄</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 4 · Текст</div>
-      <div class="cc-title">Скрининг носительства, МГК и пренатальная диагностика</div>
-      <div class="cc-desc">Показания к МГК, скрининг носительства, инвазивные и неинвазивные методы ПД, преимплантационное генетическое тестирование (ПГТ), периконцепционная профилактика.</div>
-      <div><span class="key-pill">Источник: УМП Эвоген</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-text">Материал</span></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- SECTION 4: VIDEOS -->
-  <div class="section-title" style="margin-top: 28px">
-    🎥 Видеолекции
-    <span class="section-chip badge-video">4 видео · Kinescope</span>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-video">🎥</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 1 · Видеолекция 1</div>
-      <div class="cc-title">Введение в молекулярную генетику</div>
-      <div class="cc-desc">Основы структуры ДНК, хромосом и кариотипа. Общий обзор наследственной информации.</div>
-      <div><span class="key-pill">Платформа Kinescope</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-video">Видео</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-video">🎥</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 3 · Видеолекция 2</div>
-      <div class="cc-title">Молекулярно-генетические методы диагностики, часть 1</div>
-      <div class="cc-desc">ПЦР, MLPA, секвенирование — принципы работы и клиническое применение.</div>
-      <div><span class="key-pill">Платформа Kinescope</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-video">Видео</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-video">🎥</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 3 · Видеолекция 3</div>
-      <div class="cc-title">Молекулярно-генетические методы диагностики, часть 2</div>
-      <div class="cc-desc">Хромосомный микроматричный анализ (ХМА), NGS-панели, экзомное секвенирование.</div>
-      <div><span class="key-pill">Платформа Kinescope</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-video">Видео</span></div>
-  </div>
-
-  <div class="content-card">
-    <div class="cc-icon icon-video">🎥</div>
-    <div class="cc-body">
-      <div class="cc-label">Модуль 4 · Видеолекция 4</div>
-      <div class="cc-title">Профилактика наследственной патологии</div>
-      <div class="cc-desc">МГК, пренатальная диагностика, периконцепционная профилактика — системный взгляд на предотвращение наследственных болезней.</div>
-      <div><span class="key-pill">Платформа Kinescope</span></div>
-    </div>
-    <div class="cc-right"><span class="badge badge-video">Видео</span></div>
-  </div>
+  <div class="note">💡 Главная идея: <b>ничего не придумано «из головы»</b>. Каждый материал и каждый вопрос собран из конкретных кусочков двух официальных документов — и это всегда можно проверить по номеру чанка.</div>
 
 </main>
+
+<footer class="footer">med-game.ru · Эвоген · Пренатальная диагностика · Банк контента</footer>
 </body>
 </html>
